@@ -18,7 +18,7 @@ services:
     # Cache
     configuration.cache.warmer:
         class: KunicMarko\ConfigurationPanelBundle\Cache\Warmer\ConfigurationCacheWarmer
-        arguments: ["@doctrine.orm.entity_manager","%kernel.cache_dir%","%configuration_panel.type%"]
+        arguments: ["@doctrine.orm.entity_manager","%kernel.cache_dir%"]
         tags:
             - { name: kernel.cache_warmer }
 

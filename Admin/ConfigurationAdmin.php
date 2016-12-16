@@ -18,6 +18,7 @@ use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\DateType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ChoiceType;
+use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\CheckboxType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ColorType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\EmailType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\HtmlType;
@@ -158,19 +159,21 @@ class ConfigurationAdmin extends AbstractAdmin
                 $formMapper->add('value', FormEmailType::class,['required' => false]);
             break;
             case CheckboxType::class :
-                if($choices = $object->formatChoices()){
-                    $formMapper->add('value', FormChoiceType::class, ['choices' => $choices, 'required' => false, 'multiple' => true, 'expanded' => true]);                   
+                if($object->formatChoices()){
+                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false, 'multiple' => true, 'expanded' => true]);                   
                 }
             case ChoiceType::class :
-                if($choices = $object->formatChoices() && $class === ChoiceType::class ){
-                    $formMapper->add('value', FormChoiceType::class, ['choices' => $choices, 'required' => false]);                   
+                if($object->formatChoices() && $class === ChoiceType::class ){
+                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false]);                   
                 }
-                $formMapper->add('choices', null, [
-                        'label'=>'Options',
-                        'attr' => [
-                            'placeholder' => "option1:Option1\r\noption2:Option2\r\noption3:Option3"
-                        ]
-                ]);
+                if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
+                    $formMapper->add('choices', null, [
+                            'label'=>'Options',
+                            'attr' => [
+                                'placeholder' => "option1:Option1\r\noption2:Option2\r\noption3:Option3"
+                            ]
+                    ]);
+                }
             break;
             case BooleanType::class :
                 $formMapper->add('value', FormChoiceType::class, ['required' => false, 'data' => $object->getId() ? $object->getValue() : 0,
@@ -181,7 +184,7 @@ class ConfigurationAdmin extends AbstractAdmin
                 ]);
             break;
             case ColorType::class :
-                $formMapper->add('value', FormTextType::class, ['required' => false,'data' => '#FF0000','attr' => ['class' => 'colorpicker']]);
+                $formMapper->add('value', FormTextType::class, ['required' => false,'data' => $object->getId() ? $object->getValue() : '#FF0000','attr' => ['class' => 'colorpicker']]);
             break;
             case TextareaType::class :
                 $formMapper->add('value', null, [ 'required' => false ]);
@@ -209,7 +212,7 @@ class ConfigurationAdmin extends AbstractAdmin
         if($this->checkType('FileType')){
             if($object->getValue() === null) return $object->setValue($object->getOldFile());
             $fileName = $this->uploadFile($object->getValue());
-            $this->removeFile($object->getOldFile());
+            if($object->getOldFile() !== null) $this->removeFile($object->getOldFile());
             $object->setValue($fileName);
         }
     }
@@ -222,7 +225,7 @@ class ConfigurationAdmin extends AbstractAdmin
     }
 
     public function postRemove($object) {
-        if($this->checkType('FileType')){
+        if($this->checkType('FileType') && $object->getValue() !== null){
             $this->removeFile($object->getValue());
         }
         $this->updateCache();

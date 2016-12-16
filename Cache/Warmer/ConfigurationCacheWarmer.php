@@ -11,11 +11,9 @@ class ConfigurationCacheWarmer implements CacheWarmerInterface
 {
     private $em;
     private $cacheDirectory;
-    private $type;
-    public function __construct(EntityManager $em, $cacheDirectory, $type) {
+    public function __construct(EntityManager $em, $cacheDirectory) {
         $this->em = $em;
         $this->cacheDirectory = $cacheDirectory;
-        $this->type = $type;
     }
 
     /**
@@ -50,8 +48,8 @@ class ConfigurationCacheWarmer implements CacheWarmerInterface
         foreach ($this->getConfigurationData() as $item) {
             $cacheKey = $item->getName();
             // Due to lazy loading, $media will not get initialized,
-            // therefore we need to explicitly get it
-            if($item instanceof $this->type){
+            // therefore we need to explicitly get it 
+            if(strpos(get_class($item), 'Media') !== false){
                 $mediaType = $this
                     ->em
                     ->getRepository('ConfigurationPanelBundle:Configuration')
