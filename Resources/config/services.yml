@@ -3,7 +3,7 @@ parameters:
 services:
     configuration.admin:
         class: KunicMarko\ConfigurationPanelBundle\Admin\ConfigurationAdmin
-        arguments: [~, KunicMarko\ConfigurationPanelBundle\Entity\Configuration, KunicMarko\ConfigurationPanelBundle:ConfigurationAdmin]
+        arguments: [~, KunicMarko\ConfigurationPanelBundle\Entity\Configuration, ConfigurationPanelBundle:ConfigurationAdmin]
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Configuration Panel", on_top: true , label_catalogue: ~, icon: '<i class="fa fa-sliders"></i>'}
         calls:

@@ -65,7 +65,7 @@ class ConfigurationAdmin extends AbstractAdmin
     }
     protected function configureTabMenu(ItemInterface $menu, $action, AdminInterface $childAdmin = null)
     {
-        $routes = array('admin_configurationpanel_configuration_list');
+        $routes = array('admin_kunicmarko_configurationpanel_configuration_list');
         $currentRoute = $this->getRequest()->get('_route');
         if(!in_array($currentRoute, $routes)) return;
         if(!$this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) return;
