@@ -1,0 +1,52 @@
+parameters:
+    upload_dir: "%kernel.root_dir%/../web/%configuration_panel.upload_directory%"
+services:
+    configuration.admin:
+        class: KunicMarko\ConfigurationPanelBundle\Admin\ConfigurationAdmin
+        arguments: [~, KunicMarko\ConfigurationPanelBundle\Entity\Configuration, KunicMarko\ConfigurationPanelBundle:ConfigurationAdmin]
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Configuration Panel", on_top: true , label_catalogue: ~, icon: '<i class="fa fa-sliders"></i>'}
+        calls:
+            - [ setSubClasses, [{date : 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\DateType',boolean : 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType',text: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextType',email: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\EmailType',file : %configuration_panel.type%,choice: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ChoiceType',html: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\HtmlType',checkbox : 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\CheckboxType',color: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ColorType',other: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType'}]]
+            - [ setAuthorizationChecker, ["@security.authorization_checker"]]
+            - [ setUploadDirectory, ["%upload_dir%"]]
+
+    global.configuration:
+        class: KunicMarko\ConfigurationPanelBundle\Services\ConfigurationService
+        arguments: ["%kernel.cache_dir%"]
+
+    # Cache
+    configuration.cache.warmer:
+        class: KunicMarko\ConfigurationPanelBundle\Cache\Warmer\ConfigurationCacheWarmer
+        arguments: ["@doctrine.orm.entity_manager","%kernel.cache_dir%","%configuration_panel.type%"]
+        tags:
+            - { name: kernel.cache_warmer }
+
+    configuration.discriminator_map.listener:
+        class: KunicMarko\ConfigurationPanelBundle\EventListener\DiscriminatorMapListener
+        arguments: ["%configuration_panel.type%"]
+        tags:
+            - { name: doctrine.event_listener, event: loadClassMetadata }
+
+    configuration.twig.extension:
+        class: KunicMarko\ConfigurationPanelBundle\Twig\GlobalVariables
+        arguments: ["@global.configuration"]
+        tags:
+            - { name: twig.extension }
+    generateurl.twig.filter:
+        class: KunicMarko\ConfigurationPanelBundle\Twig\GenerateURL
+        public: false
+        arguments: ["@templating.helper.assets","%configuration_panel.upload_directory%"]
+        tags:
+            - { name: twig.extension }
+    elapsedtime.twig.filter:
+        class: KunicMarko\ConfigurationPanelBundle\Twig\ElapsedTime
+        public: false
+        tags:
+            - { name: twig.extension }
+    isimage.twig.filter:
+        class: KunicMarko\ConfigurationPanelBundle\Twig\IsImage
+        arguments: ["%upload_dir%"]
+        public: false
+        tags:
+            - { name: twig.extension }

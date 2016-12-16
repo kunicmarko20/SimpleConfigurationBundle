@@ -1,0 +1,20 @@
+{% extends admin.getTemplate('base_list_field') %}
+
+
+{% block field_span_attributes %}
+    {% spaceless %}
+        {{ parent() }}
+        data-source="[{value: 0, text: '{%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}'},{value: 1, text: '{%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}'}]"
+    {% endspaceless %}
+{% endblock %}
+
+
+{% block field %}
+    {% spaceless %}
+        {% if value %}
+            <span class="label label-success">{%- trans from 'SonataAdminBundle' %}label_type_yes{% endtrans -%}</span>
+        {% else %}
+            <span class="label label-danger">{%- trans from 'SonataAdminBundle' %}label_type_no{% endtrans -%}</span>
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}

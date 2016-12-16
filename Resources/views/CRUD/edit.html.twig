@@ -1,0 +1,12 @@
+{% extends 'SonataAdminBundle:CRUD:base_edit.html.twig' %}
+{% block javascripts %}
+{{ parent() }}
+{% if configuration.getShortClassName(object) == 'ColorType' %}
+    <script type="text/javascript" src="{{asset('/bundles/configurationpanel/js/jqColorPicker.min.js')}}"></script>
+    <script>
+        $(function() {
+            jQuery('.colorpicker').colorPicker();
+        });
+    </script>
+{% endif %}
+{% endblock %}

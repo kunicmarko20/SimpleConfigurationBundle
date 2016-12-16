@@ -1,0 +1,31 @@
+{
+    "name": "kunicmarko/configuration-panel",
+    "description": "This is a Symfony Bundle that adds configuration panel to your sonata admin.",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "Marko Kunic",
+            "email": "kunicmarko20@gmail.com",
+            "homepage": "http://www.kunicmarko.ml"
+        }
+    ],
+
+    "keywords": ["sonata admin","sonata", "symfony", "bundle","symfony configuration panel"],
+    "homepage": "https://github.com/kunicmarko20/static-translation",
+    "license": "MIT",
+    "require": {
+        "php": "^5.2|^7.0",
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "egeloen/ckeditor-bundle": "^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "KunicMarko\\ConfigurationPanelBundle\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

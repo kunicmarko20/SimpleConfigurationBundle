@@ -1,0 +1,11 @@
+{% extends admin.getTemplate('base_list_field') %}
+
+{% block field %}
+    {%- if object.date is empty -%}
+        &nbsp;
+    {%- elseif field_description.options.format is defined -%}
+        {{ object.date|date(field_description.options.format) }}
+    {%- else -%}
+        {{ object.date|date('F j, Y') }}
+    {%- endif -%}
+{% endblock %}
