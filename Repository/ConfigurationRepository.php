@@ -21,4 +21,12 @@ class ConfigurationRepository extends EntityRepository
         ]);
         return $stmt->fetch();
     }
+
+    /**
+     * @param string[] $criteria format: array('name' => <name>)
+     */
+    public function findByUniqueCriteria(array $criteria)
+    {
+        return $this->_em->getRepository('ConfigurationPanelBundle:Configuration')->findBy($criteria);
+    }
 }

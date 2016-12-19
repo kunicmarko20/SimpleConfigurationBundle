@@ -12,8 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
  * @ORM\Table()
- * @ORM\HasLifecycleCallbacks() 
- * @UniqueEntity("name")
+ * @ORM\HasLifecycleCallbacks()
+ * @UniqueEntity("name", repositoryMethod="findByUniqueCriteria")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
@@ -65,7 +65,7 @@ abstract class Configuration
      * @ORM\Column(name="category", type="string")
      */
     private $category;
-    
+
     /**
      * Get id
      *
@@ -122,14 +122,14 @@ abstract class Configuration
     {
         return $this->value;
     }
-        
+
     function __toString(){
-        
+
         if($this->getName()){
-           return $this->getName(); 
+           return $this->getName();
         }
-        
-        return 'New Item';  
+
+        return 'New Item';
     }
 
     /**
@@ -156,7 +156,7 @@ abstract class Configuration
         return $this->category;
     }
 
-    
+
     public static function getCategories(){
         return array_combine(self::Categories, self::Categories);
     }

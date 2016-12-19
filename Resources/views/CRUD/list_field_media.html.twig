@@ -3,12 +3,12 @@
 {% block field %}
     {% set file %}{% path object.media, 'reference' %}{% endset %}
     {% if object.media is not null %}
-        <a href="{{ file }}" target="_blank">
-            {% if object.media.contentType|isImage('media') %}
-                <img width="100px" src="{{ file }}" />
-            {% else %}
-                    {{ object.media.name }}
-            {% endif %}
-        </a>
+      <a href="{{ file|generateURL('media') }}" target="_blank">
+          {% if object.media.contentType|isImage('media') %}
+              <img width="100px" src="{{ file|generateURL('media') }}" />
+          {% else %}
+                  {{ object.media.name }}
+          {% endif %}
+      </a>
     {% endif %}
 {% endblock %}

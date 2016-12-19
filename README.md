@@ -4,7 +4,7 @@ This bundle adds configuration panel to your sonata admin.
 
 This bundle uses [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorBundle) , be sure to check it out.
 
-This bundle depends on [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle))
+This bundle depends on [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle)
 
 ![Dashboard](https://cloud.githubusercontent.com/assets/13528674/21304601/a1c4936e-c5c6-11e6-9834-2d9f9942c5ff.png)
 Documentation
@@ -42,7 +42,7 @@ $bundles = array(
 ```
 # app/config/config.yml
 
-configuration_panel
+configuration_panel:
     type: YourBundle\Entity\FileType #or YourBundle\Entity\MediaType
     upload_directory: uploads #directory in web folder where you want to upload stuff, if you are using Sonata Media, this is not needed
 ```
@@ -62,11 +62,11 @@ use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
 use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TemplateInterface;
 
- /**
- *
- * @ORM\Entity
- *
- */
+/**
+*
+* @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
+*
+*/
 class FileType extends Configuration implements TemplateInterface
 {
     use TemplateTrait;
@@ -106,11 +106,11 @@ use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
 use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TemplateInterface;
 
- /**
- *
- * @ORM\Entity
- *
- */
+/**
+*
+* @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
+*
+*/
 class MediaType extends Configuration implements TemplateInterface
 {
     use TemplateTrait;
@@ -183,16 +183,22 @@ sonata_media:
                 big:   { width: 500 , quality: 70}
 
 ```
+after adding new context do not forget to do `app/console sonata:media:fix-media-context`
+
 **5.** Update database
 
 ```
-app\console doctrine:schema:update --force
+app/console doctrine:schema:update --force
 ```
 
 **6.** Install Assets
 
 ```
-app\console assets:install
+app/console assets:install
+```
+**7.** Clear cache
+```
+app/console cache:clear
 ```
 
 If upload folder is not already created:

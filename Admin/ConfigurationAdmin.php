@@ -27,7 +27,7 @@ use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
 
 class ConfigurationAdmin extends AbstractAdmin
 {
-    
+
     private $AuthorizationChecker;
     private $uploadDirectory;
     /**
@@ -47,11 +47,11 @@ class ConfigurationAdmin extends AbstractAdmin
     protected function configureListFields(ListMapper $listMapper)
     {
         unset($this->listModes['mosaic']);
-        
+
         $listMapper
-            ->add('name')   
+            ->add('name')
             ->add('value',null,array('template' => 'ConfigurationPanelBundle:CRUD:list_field_value.html.twig'))
-            ->add('createdAt',null,array('template' => 'ConfigurationPanelBundle:CRUD:list_field_created_at.html.twig'))   
+            ->add('createdAt',null,array('template' => 'ConfigurationPanelBundle:CRUD:list_field_created_at.html.twig'))
             ->add('_action', null, array(
                 'actions' => array(
                     'edit' => array(
@@ -76,12 +76,12 @@ class ConfigurationAdmin extends AbstractAdmin
             $menu->addChild($v, [
                     'uri' => $this->generateUrl('list',[
                         'filter[category][type]'=>'','filter[category][value]'=>$k
-            ])]);        
+            ])]);
         }
     }
     public function getBatchActions() {
         if($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')){
-           return parent::getBatchActions();     
+           return parent::getBatchActions();
         }
     }
 
@@ -123,8 +123,8 @@ class ConfigurationAdmin extends AbstractAdmin
             );
         }
         return $list;
-    }  
-    
+    }
+
     public function configure() {
         $this->setTemplate('edit', 'ConfigurationPanelBundle:CRUD:edit.html.twig');
         $this->setTemplate('list', 'ConfigurationPanelBundle:CRUD:list.html.twig');
@@ -145,7 +145,7 @@ class ConfigurationAdmin extends AbstractAdmin
             ->add('name', FormTextType::class)
             ->add('category', FormChoiceType::class, ['choices' => Configuration::getCategories()]);
         }
-        switch($class) { 
+        switch($class) {
             case TextType::class :
                 $formMapper->add('value', FormTextType::class, ['required' => false]);
             break;
@@ -153,18 +153,18 @@ class ConfigurationAdmin extends AbstractAdmin
                 $formMapper->add('date', FormDateType::class, ['required' => false]);
             break;
             case HtmlType::class:
-                $formMapper->add('value', CKEditorType::class, ['required' => false]); 
+                $formMapper->add('value', CKEditorType::class, ['required' => false]);
             break;
             case EmailType::class :
                 $formMapper->add('value', FormEmailType::class,['required' => false]);
             break;
             case CheckboxType::class :
                 if($object->formatChoices()){
-                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false, 'multiple' => true, 'expanded' => true]);                   
+                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false, 'multiple' => true, 'expanded' => true]);
                 }
             case ChoiceType::class :
                 if($object->formatChoices() && $class === ChoiceType::class ){
-                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false]);                   
+                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false]);
                 }
                 if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
                     $formMapper->add('choices', null, [
@@ -191,16 +191,16 @@ class ConfigurationAdmin extends AbstractAdmin
             break;
             default:
                 if ($this->checkType('MediaType')) {
-                    $formMapper->add('media', 'sonata_type_model_list', ['required' => false], ['link_parameters' => ['context' => 'default']]);
+                    $formMapper->add('media', 'sonata_type_model_list', ['required' => false], ['link_parameters' => ['context' => 'configuration_panel']]);
                     break;
                 }
                 if ($this->checkType('FileType')) {
-                    $formMapper->add('value', FormFileType::class, ['label' => 'File','data_class' => null,'required'=>false]); 
+                    $formMapper->add('value', FormFileType::class, ['label' => 'File','data_class' => null,'required'=>false]);
                 }
             break;
         }
     }
-    
+
     public function prePersist($object) {
         if($this->checkType('FileType')){
             if($object->getValue() === null) return;
@@ -238,11 +238,11 @@ class ConfigurationAdmin extends AbstractAdmin
             ->get('configuration.cache.warmer')
             ->warmUp();
     }
-    
+
     public function checkType($type){
         return strpos($this->getClass(), $type) !== false ?: false;
     }
-    
+
     private function uploadFile($file){
         $fileName = md5(uniqid()).'.'.$file->guessExtension();
         $file->move($this->getUploadDirectory(),
@@ -251,26 +251,26 @@ class ConfigurationAdmin extends AbstractAdmin
 
         return $fileName;
     }
-    
+
     private function removeFile($file){
         $dir = $this->getUploadDirectory();
         if(file_exists("$dir/$file")) unlink("$dir/$file");
     }
-          
+
     public function setUploadDirectory($directory){
         $this->uploadDirectory = $directory;
     }
-    
+
     public function getUploadDirectory(){
         return $this->uploadDirectory;
     }
-       
+
     public function setAuthorizationChecker($AuhtorizationChecker) {
         $this->AuthorizationChecker = $AuhtorizationChecker;
     }
-    
+
     public function getAuthorizationChecker() {
         return $this->AuthorizationChecker;
     }
-    
+
 }

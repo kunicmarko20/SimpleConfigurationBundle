@@ -13,7 +13,7 @@ class GenerateURL extends \Twig_Extension
         $this->assets = $assets;
         $this->directory = $directory;
     }
-    
+
     public function getFilters()
     {
         return array(
@@ -21,8 +21,11 @@ class GenerateURL extends \Twig_Extension
         );
     }
 
-    public function generateURLFilter($name)
+    public function generateURLFilter($name,$type = null)
     {
+        if($type === 'media'){
+            return $this->assets->getUrl($name);
+        }
         return $this->assets->getUrl("$this->directory/$name");
     }
 
