@@ -6,6 +6,20 @@ This bundle uses [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorB
 
 This bundle depends on [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle))
 
+![Dashboard](https://cloud.githubusercontent.com/assets/13528674/21304601/a1c4936e-c5c6-11e6-9834-2d9f9942c5ff.png)
+Documentation
+-------------
+
+
+* [Installation](#installation)
+  * [FileType](#filetype)
+  * [MediaType](#mediatype)
+* [How to use](#how-to-use)
+* [Roles and Categories](#roles-and-categories)
+* [Checkbox and Choice Type](#checkbox-and-choice-type)
+* [Additional stuff](#additional-stuff)
+
+
 ## Installation
 
 **1.**  Add to composer.json to the `require` key
@@ -88,9 +102,9 @@ class FileType extends Configuration implements TemplateInterface
 
 namespace YourBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use SonataConfigurationBundle\Entity\Configuration;
-use SonataConfigurationBundle\Traits\TemplateTrait;
-use SonataConfigurationBundle\Entity\ConfigurationTypes\TemplateInterface;
+use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
+use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
+use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TemplateInterface;
 
  /**
  *
@@ -192,9 +206,6 @@ chmod -R 0777 web/uploads
 In your twig template you can call it like :
 ```
 {{ configuration.getAll() }}
-```
-or
-```
 {{ configuration.getValueFor(name) }}
 ```
 
@@ -203,6 +214,24 @@ if you want to use it in controller you can do :
 $this->get('global.configuration')->getAll()
 $this->get('global.configuration')->getValueFor()
 ```
+
+## Roles and Categories
+
+This bundle was made as help to developers so only `ROLE_SUPER_ADMIN` can create and delete items, regular admins can only edit. ( You can create keys and allow other admins to just edit them ).
+There are 2 categories when creating item, `Meta` and `General`, only `ROLE_SUPER_ADMIN` can see and edit items that are in `META` category while normal admins can only edit and see `General` items.
+
+## Checkbox and Choice Type
+
+![Checkbox](https://cloud.githubusercontent.com/assets/13528674/21304614/c08d54de-c5c6-11e6-91e9-d6df5ced7cec.png)
+
+As you can see there is Options value that is only visible to `ROLE_SUPER_ADMIN`, correct format is :
+```
+value:Label
+value2:label2
+value3:label3
+```
+
+`( Separator is enter key )`
 
 ## Additional stuff
 
@@ -226,20 +255,16 @@ If you are not using sonataMedia, you can use `|generateURL` to get absolute url
 
 **3.** isImage
 
-You can also use `var|isImage` to check if file is image
+You can also use `|isImage` to check if file is image
 ```
 {{ var|isImage }}
 #outputs true or false
 ```
 
-Also this bundle depends on [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorBundle) as we said on beggning so you can use ckeditor as formtype :
+Also this bundle depends on [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorBundle) as we said on beginning so you can use ckeditor as formtype :
 
 ```
 use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 
 $builder->add('value', CKEditorType::class);
 ```
-
-
-
-
