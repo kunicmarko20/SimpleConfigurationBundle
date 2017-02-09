@@ -58,7 +58,7 @@ If you are using Sonata Media and want to use it with configuration panel, then 
 
 namespace YourBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
+use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
 use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TemplateInterface;
 
@@ -102,7 +102,7 @@ class FileType extends Configuration implements TemplateInterface
 
 namespace YourBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
+use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
 use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TemplateInterface;
 
@@ -217,8 +217,8 @@ In your twig template you can call it like :
 
 if you want to use it in controller you can do :
 ```
-$this->get('global.configuration')->getAll()
-$this->get('global.configuration')->getValueFor()
+$this->get('configuration_panel.global.service')->getAll()
+$this->get('configuration_panel.global.service')->getValueFor()
 ```
 
 ## Roles and Categories

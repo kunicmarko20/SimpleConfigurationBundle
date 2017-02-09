@@ -1,9 +1,9 @@
 parameters:
     upload_dir: "%kernel.root_dir%/../web/%configuration_panel.upload_directory%"
 services:
-    configuration.admin:
+    configuration_panel.admin:
         class: KunicMarko\ConfigurationPanelBundle\Admin\ConfigurationAdmin
-        arguments: [~, KunicMarko\ConfigurationPanelBundle\Entity\Configuration, ConfigurationPanelBundle:ConfigurationAdmin]
+        arguments: [~, KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration, ConfigurationPanelBundle:ConfigurationAdmin]
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Configuration Panel", on_top: true , label_catalogue: ~, icon: '<i class="fa fa-sliders"></i>'}
         calls:
@@ -11,40 +11,40 @@ services:
             - [ setAuthorizationChecker, ["@security.authorization_checker"]]
             - [ setUploadDirectory, ["%upload_dir%"]]
 
-    global.configuration:
+    configuration_panel.global.service:
         class: KunicMarko\ConfigurationPanelBundle\Services\ConfigurationService
         arguments: ["%kernel.cache_dir%"]
 
     # Cache
-    configuration.cache.warmer:
+    configuration_panel.cache.warmer:
         class: KunicMarko\ConfigurationPanelBundle\Cache\Warmer\ConfigurationCacheWarmer
         arguments: ["@doctrine.orm.entity_manager","%kernel.cache_dir%"]
         tags:
             - { name: kernel.cache_warmer }
 
-    configuration.discriminator_map.listener:
+    configuration_panel.discriminator_map.listener:
         class: KunicMarko\ConfigurationPanelBundle\EventListener\DiscriminatorMapListener
         arguments: ["%configuration_panel.type%"]
         tags:
             - { name: doctrine.event_listener, event: loadClassMetadata }
 
-    configuration.twig.extension:
+    configuration_panel.twig.extension:
         class: KunicMarko\ConfigurationPanelBundle\Twig\GlobalVariables
-        arguments: ["@global.configuration"]
+        arguments: ["@configuration_panel.global.service"]
         tags:
             - { name: twig.extension }
-    generateurl.twig.filter:
+    configuration_panel.generate_url.filter:
         class: KunicMarko\ConfigurationPanelBundle\Twig\GenerateURL
         public: false
         arguments: ["@templating.helper.assets","%configuration_panel.upload_directory%"]
         tags:
             - { name: twig.extension }
-    elapsedtime.twig.filter:
+    configuration_panel.elapsed_time.filter:
         class: KunicMarko\ConfigurationPanelBundle\Twig\ElapsedTime
         public: false
         tags:
             - { name: twig.extension }
-    isimage.twig.filter:
+    configuration_panel.is_image.filter:
         class: KunicMarko\ConfigurationPanelBundle\Twig\IsImage
         arguments: ["%upload_dir%"]
         public: false

@@ -2,7 +2,6 @@
 
 namespace KunicMarko\ConfigurationPanelBundle\Twig;
 
-
 class ElapsedTime extends \Twig_Extension
 {
     
@@ -21,8 +20,8 @@ class ElapsedTime extends \Twig_Extension
      */
     public function elapsedTimeFilter($timestamp)
     {
-        if($timestamp instanceof \DateTime){
-            $timestamp = $timestamp->getTimestamp();           
+        if ($timestamp instanceof \DateTime) {
+            $timestamp = $timestamp->getTimestamp();
         }
 
         $time = time() - $timestamp; // time since that moment
@@ -39,8 +38,12 @@ class ElapsedTime extends \Twig_Extension
 
         foreach ($tokens as $unit => $text) {
             // sub-second edge case
-            if ($time < 1) return 'just now';
-            if ($time < $unit) continue;
+            if ($time < 1) {
+                return 'just now';
+            }
+            if ($time < $unit) {
+                continue;
+            }
             $numberOfUnits = floor($time / $unit);
             return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s ago':' ago');
         }

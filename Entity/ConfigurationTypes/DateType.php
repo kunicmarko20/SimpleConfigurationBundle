@@ -1,8 +1,9 @@
 <?php
 
 namespace KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes;
+
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
+use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
 use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
 
 /**
@@ -10,10 +11,11 @@ use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
 * @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
 *
 */
-class DateType extends Configuration implements TemplateInterface
+class DateType extends AbstractConfiguration implements TemplateInterface
 {
     use TemplateTrait;
     private static $template = 'ConfigurationPanelBundle:CRUD:list_field_date.html.twig';
+
     /**
      * @var \DateTime
      *

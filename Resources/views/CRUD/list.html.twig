@@ -2,7 +2,7 @@
 
 {% block table_body %}
     <tbody>
-        {% for object in admin.datagrid.results if is_granted('ROLE_SUPER_ADMIN') or (object.category != constant('MetaCategory', object) ) %}
+        {% for object in admin.datagrid.results if is_granted('ROLE_SUPER_ADMIN') or (object.category != constant('META_CATEGORY', object) ) %}
             <tr>
                 {% include admin.getTemplate('inner_list_row') %}
             </tr>

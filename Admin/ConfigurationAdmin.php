@@ -23,7 +23,7 @@ use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ColorType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\EmailType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\HtmlType;
 use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType;
-use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
+use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
 
 class ConfigurationAdmin extends AbstractAdmin
 {
@@ -38,7 +38,7 @@ class ConfigurationAdmin extends AbstractAdmin
         $datagridMapper
             ->add('name')
             ->add('value')
-            ->add('category',null, array('show_filter'=>false))
+            ->add('category', null, array('show_filter'=>false))
         ;
     }
     /**
@@ -50,8 +50,8 @@ class ConfigurationAdmin extends AbstractAdmin
 
         $listMapper
             ->add('name')
-            ->add('value',null,array('template' => 'ConfigurationPanelBundle:CRUD:list_field_value.html.twig'))
-            ->add('createdAt',null,array('template' => 'ConfigurationPanelBundle:CRUD:list_field_created_at.html.twig'))
+            ->add('value', null, array('template' => 'ConfigurationPanelBundle:CRUD:list_field_value.html.twig'))
+            ->add('createdAt', null, array('template' => 'ConfigurationPanelBundle:CRUD:list_field_created_at.html.twig'))
             ->add('_action', null, array(
                 'actions' => array(
                     'edit' => array(
@@ -62,26 +62,30 @@ class ConfigurationAdmin extends AbstractAdmin
                     ),
                 )
             ));
-
     }
     protected function configureTabMenu(ItemInterface $menu, $action, AdminInterface $childAdmin = null)
     {
         $routes = array('admin_kunicmarko_configurationpanel_configuration_list');
         $currentRoute = $this->getRequest()->get('_route');
-        if(!in_array($currentRoute, $routes)) return;
-        if(!$this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) return;
-        $filters = Configuration::getCategories();
+        if (!in_array($currentRoute, $routes)) {
+            return;
+        }
+        if (!$this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
+            return;
+        }
+        $filters = AbstractConfiguration::getCategories();
 
-        foreach($filters as $k => $v){
+        foreach ($filters as $k => $v) {
             $menu->addChild($v, [
-                    'uri' => $this->generateUrl('list',[
+                    'uri' => $this->generateUrl('list', [
                         'filter[category][type]'=>'','filter[category][value]'=>$k
-            ])]);
+                    ])]);
         }
     }
-    public function getBatchActions() {
-        if($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')){
-           return parent::getBatchActions();
+    public function getBatchActions()
+    {
+        if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
+            return parent::getBatchActions();
         }
     }
 
@@ -125,7 +129,8 @@ class ConfigurationAdmin extends AbstractAdmin
         return $list;
     }
 
-    public function configure() {
+    public function configure()
+    {
         $this->setTemplate('edit', 'ConfigurationPanelBundle:CRUD:edit.html.twig');
         $this->setTemplate('list', 'ConfigurationPanelBundle:CRUD:list.html.twig');
     }
@@ -143,27 +148,27 @@ class ConfigurationAdmin extends AbstractAdmin
         if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
             $formMapper
             ->add('name', FormTextType::class)
-            ->add('category', FormChoiceType::class, ['choices' => Configuration::getCategories()]);
+            ->add('category', FormChoiceType::class, ['choices' => AbstractConfiguration::getCategories()]);
         }
-        switch($class) {
-            case TextType::class :
+        switch ($class) {
+            case TextType::class:
                 $formMapper->add('value', FormTextType::class, ['required' => false]);
-            break;
-            case DateType::class :
+                break;
+            case DateType::class:
                 $formMapper->add('date', FormDateType::class, ['required' => false]);
-            break;
+                break;
             case HtmlType::class:
                 $formMapper->add('value', CKEditorType::class, ['required' => false]);
-            break;
-            case EmailType::class :
-                $formMapper->add('value', FormEmailType::class,['required' => false]);
-            break;
-            case CheckboxType::class :
-                if($object->formatChoices()){
+                break;
+            case EmailType::class:
+                $formMapper->add('value', FormEmailType::class, ['required' => false]);
+                break;
+            case CheckboxType::class:
+                if ($object->formatChoices()) {
                     $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false, 'multiple' => true, 'expanded' => true]);
                 }
-            case ChoiceType::class :
-                if($object->formatChoices() && $class === ChoiceType::class ){
+            case ChoiceType::class:
+                if ($object->formatChoices() && $class === ChoiceType::class) {
                     $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false]);
                 }
                 if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
@@ -174,21 +179,21 @@ class ConfigurationAdmin extends AbstractAdmin
                             ]
                     ]);
                 }
-            break;
-            case BooleanType::class :
+                break;
+            case BooleanType::class:
                 $formMapper->add('value', FormChoiceType::class, ['required' => false, 'data' => $object->getId() ? $object->getValue() : 0,
                     'choices' => [
                         0 => 'no',
                         1 => 'yes'
                     ],
                 ]);
-            break;
-            case ColorType::class :
+                break;
+            case ColorType::class:
                 $formMapper->add('value', FormTextType::class, ['required' => false,'data' => $object->getId() ? $object->getValue() : '#FF0000','attr' => ['class' => 'colorpicker']]);
-            break;
-            case TextareaType::class :
+                break;
+            case TextareaType::class:
                 $formMapper->add('value', null, [ 'required' => false ]);
-            break;
+                break;
             default:
                 if ($this->checkType('MediaType')) {
                     $formMapper->add('media', 'sonata_type_model_list', ['required' => false], ['link_parameters' => ['context' => 'configuration_panel']]);
@@ -197,80 +202,101 @@ class ConfigurationAdmin extends AbstractAdmin
                 if ($this->checkType('FileType')) {
                     $formMapper->add('value', FormFileType::class, ['label' => 'File','data_class' => null,'required'=>false]);
                 }
-            break;
+                break;
         }
     }
 
-    public function prePersist($object) {
-        if($this->checkType('FileType')){
-            if($object->getValue() === null) return;
+    public function prePersist($object)
+    {
+        if ($this->checkType('FileType')) {
+            if ($object->getValue() === null) {
+                return;
+            }
             $fileName = $this->uploadFile($object->getValue());
             $object->setValue($fileName);
         }
     }
-    public function preUpdate($object) {
-        if($this->checkType('FileType')){
-            if($object->getValue() === null) return $object->setValue($object->getOldFile());
+    public function preUpdate($object)
+    {
+        if ($this->checkType('FileType')) {
+            if ($object->getValue() === null) {
+                return $object->setValue($object->getOldFile());
+            }
             $fileName = $this->uploadFile($object->getValue());
-            if($object->getOldFile() !== null) $this->removeFile($object->getOldFile());
+            if ($object->getOldFile() !== null) {
+                $this->removeFile($object->getOldFile());
+            }
             $object->setValue($fileName);
         }
     }
-    public function postPersist($object) {
+    public function postPersist($object)
+    {
         $this->updateCache();
     }
 
-    public function postUpdate($object) {
+    public function postUpdate($object)
+    {
         $this->updateCache();
     }
 
-    public function postRemove($object) {
-        if($this->checkType('FileType') && $object->getValue() !== null){
+    public function postRemove($object)
+    {
+        if ($this->checkType('FileType') && $object->getValue() !== null) {
             $this->removeFile($object->getValue());
         }
         $this->updateCache();
     }
 
-    public function updateCache(){
+    public function updateCache()
+    {
         $this
             ->getConfigurationPool()
             ->getContainer()
-            ->get('configuration.cache.warmer')
+            ->get('configuration_panel.cache.warmer')
             ->warmUp();
     }
 
-    public function checkType($type){
+    public function checkType($type)
+    {
         return strpos($this->getClass(), $type) !== false ?: false;
     }
 
-    private function uploadFile($file){
+    private function uploadFile($file)
+    {
         $fileName = md5(uniqid()).'.'.$file->guessExtension();
-        $file->move($this->getUploadDirectory(),
+        $file->move(
+            $this->getUploadDirectory(),
             $fileName
         );
 
         return $fileName;
     }
 
-    private function removeFile($file){
+    private function removeFile($file)
+    {
         $dir = $this->getUploadDirectory();
-        if(file_exists("$dir/$file")) unlink("$dir/$file");
+        if (file_exists("$dir/$file")) {
+            unlink("$dir/$file");
+        }
     }
 
-    public function setUploadDirectory($directory){
+    public function setUploadDirectory($directory)
+    {
         $this->uploadDirectory = $directory;
     }
 
-    public function getUploadDirectory(){
+    public function getUploadDirectory()
+    {
         return $this->uploadDirectory;
     }
 
-    public function setAuthorizationChecker($AuhtorizationChecker) {
+    public function setAuthorizationChecker($AuhtorizationChecker)
+    {
         $this->AuthorizationChecker = $AuhtorizationChecker;
     }
 
-    public function getAuthorizationChecker() {
+    public function getAuthorizationChecker()
+    {
         return $this->AuthorizationChecker;
     }
-
 }

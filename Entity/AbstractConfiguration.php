@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Configuration
+ * AbstractConfiguration
  *
  * @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
  * @ORM\Table()
@@ -29,12 +29,12 @@ use Symfony\Component\Validator\Constraints as Assert;
  * })
  */
 
-abstract class Configuration
+abstract class AbstractConfiguration
 {
     use TimestampableTrait;
-    const MetaCategory = 'Meta';
-    const GeneralCategory = 'General';
-    const Categories = [self::MetaCategory, self::GeneralCategory];
+    const META_CATEGORY = 'Meta';
+    const GENERAL_CATEGORY = 'General';
+    const CATEGORIES = [self::META_CATEGORY, self::GENERAL_CATEGORY];
     /**
      * @var integer
      *
@@ -123,12 +123,12 @@ abstract class Configuration
         return $this->value;
     }
 
-    function __toString(){
+    public function __toString()
+    {
 
-        if($this->getName()){
-           return $this->getName();
+        if ($this->getName()) {
+            return $this->getName();
         }
-
         return 'New Item';
     }
 
@@ -157,7 +157,8 @@ abstract class Configuration
     }
 
 
-    public static function getCategories(){
-        return array_combine(self::Categories, self::Categories);
+    public static function getCategories()
+    {
+        return array_combine(self::CATEGORIES, self::CATEGORIES);
     }
 }

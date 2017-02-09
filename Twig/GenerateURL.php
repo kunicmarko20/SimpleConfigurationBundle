@@ -1,6 +1,7 @@
 <?php
 
 namespace KunicMarko\ConfigurationPanelBundle\Twig;
+
 use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
 
 class GenerateURL extends \Twig_Extension
@@ -8,7 +9,7 @@ class GenerateURL extends \Twig_Extension
     protected $assets;
     private $directory;
 
-    public function __construct(AssetsHelper $assets,string $directory)
+    public function __construct(AssetsHelper $assets, string $directory)
     {
         $this->assets = $assets;
         $this->directory = $directory;
@@ -21,9 +22,9 @@ class GenerateURL extends \Twig_Extension
         );
     }
 
-    public function generateURLFilter($name,$type = null)
+    public function generateURLFilter($name, $type = null)
     {
-        if($type === 'media'){
+        if ($type === 'media') {
             return $this->assets->getUrl($name);
         }
         return $this->assets->getUrl("$this->directory/$name");

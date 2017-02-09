@@ -42,9 +42,8 @@ trait TimestampableTrait
     public function prePersist()
     {
         $this->createdAt = new \DateTime();
-
     }
-    
+
     /**
     * @ORM\PreUpdate
     */

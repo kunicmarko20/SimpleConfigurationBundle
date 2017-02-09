@@ -1,15 +1,17 @@
 <?php
 
 namespace KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes;
+
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
+use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
 use KunicMarko\ConfigurationPanelBundle\Traits\ChoicesTrait;
+
 /**
 *
 * @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
 *
 */
-class CheckboxType extends Configuration implements TemplateInterface
+class CheckboxType extends AbstractConfiguration implements TemplateInterface
 {
     use ChoicesTrait;
 
@@ -28,5 +30,4 @@ class CheckboxType extends Configuration implements TemplateInterface
     {
         return json_decode($this->value);
     }
-
 }

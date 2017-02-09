@@ -22,14 +22,18 @@ trait ChoicesTrait
         $this->choices = $choices;
     }
     
-    public function formatChoices(){
-        if($this->choices == null) return null;
-        $options = explode("\r\n",$this->choices);
+    public function formatChoices()
+    {
+        if ($this->choices == null) {
+            return null;
+        }
+
+        $options = explode("\r\n", $this->choices);
         $arr = [];
-        foreach($options as $option){
-            $option = explode(":",$option);
+        foreach ($options as $option) {
+            $option = explode(":", $option);
             $arr[trim($option[0])] = trim($option[1]);
         }
         return $arr;
-    }     
+    }
 }

@@ -4,7 +4,7 @@ namespace KunicMarko\ConfigurationPanelBundle\EventListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\Common\Annotations\AnnotationReader;
-use KunicMarko\ConfigurationPanelBundle\Entity\Configuration;
+use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
 
 class DiscriminatorMapListener
 {
@@ -22,7 +22,9 @@ class DiscriminatorMapListener
     {
         $metadata = $event->getClassMetadata();
         $class = $metadata->getReflectionClass();
-        if ($class->getName() !== Configuration::class) return;
+        if ($class->getName() !== AbstractConfiguration::class) {
+            return;
+        }
 
         $reader = new AnnotationReader;
         if (null !== $discriminatorMapAnnotation = $reader->getClassAnnotation($class, 'Doctrine\ORM\Mapping\DiscriminatorMap')) {
@@ -31,6 +33,5 @@ class DiscriminatorMapListener
 
         $discriminatorMap["file"] = $this->fileType;
         $metadata->setDiscriminatorMap($discriminatorMap);
-
     }
 }

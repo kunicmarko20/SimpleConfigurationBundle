@@ -16,7 +16,8 @@ class GlobalVariables extends \Twig_Extension
         $this->configurationService = $configurationService;
     }
 
-    public function getGlobals() {
+    public function getGlobals()
+    {
         return array(
             'configuration' => $this->configurationService
         );
@@ -26,5 +27,4 @@ class GlobalVariables extends \Twig_Extension
     {
         return 'configuration';
     }
-
 }
