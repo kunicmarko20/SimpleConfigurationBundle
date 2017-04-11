@@ -1,20 +1,22 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Services;
+namespace KunicMarko\SonataConfigurationPanelBundle\Services;
 
 use Doctrine\Common\Cache\FilesystemCache;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
 
 class ConfigurationService
 {
+    /** @var false|array  */
     private $config;
     
     public function __construct($dir)
     {
         $cacheDriver = new FilesystemCache($dir);
-        $this->config = $cacheDriver->fetch('ConfigurationPanel');
+        $this->config = $cacheDriver->fetch(AbstractConfiguration::CACHE_KEY);
     }
     /**
-     * Human readable difference since $dt in past
+     * Get All Values
      *
      * @return array
      */
@@ -39,7 +41,7 @@ class ConfigurationService
     
     /**
      * Get class Name
-     *
+     * @param object $object
      * @return string
      */
     public function getShortClassName($object)

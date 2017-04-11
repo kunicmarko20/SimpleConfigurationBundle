@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Traits;
+namespace KunicMarko\SonataConfigurationPanelBundle\Traits;
 
 trait TimestampableTrait
 {

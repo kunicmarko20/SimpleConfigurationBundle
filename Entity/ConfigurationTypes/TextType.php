@@ -1,18 +1,32 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes;
+namespace KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes;
 
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
-use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\TextType as FormTextType;
 
 /**
 *
-* @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
+* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
 *
 */
-class TextType extends AbstractConfiguration implements TemplateInterface
+class TextType extends AbstractConfiguration
 {
-    use TemplateTrait;
-    private static $template = 'SonataAdminBundle:CRUD:list_string.html.twig';
+    /**
+     * {@inheritDoc}
+     */
+    public function getTemplate()
+    {
+        return 'SonataAdminBundle:CRUD:list_string.html.twig';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateFormField(FormMapper $formMapper)
+    {
+        $formMapper->add('value', FormTextType::class, ['required' => false]);
+    }
 }

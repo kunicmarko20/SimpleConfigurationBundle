@@ -15,12 +15,11 @@
     "license": "MIT",
     "require": {
         "php": "^5.6|^7.0",
-        "symfony/framework-bundle": "~2.8|~3.0",
-        "egeloen/ckeditor-bundle": "^4.0"
+        "symfony/framework-bundle": "~2.8|~3.0"
     },
     "autoload": {
         "psr-4": {
-            "KunicMarko\\ConfigurationPanelBundle\\": ""
+            "KunicMarko\\SonataConfigurationPanelBundle\\": ""
         }
     },
     "extra": {

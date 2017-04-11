@@ -1,8 +1,8 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Twig;
+namespace KunicMarko\SonataConfigurationPanelBundle\Twig;
 
-use KunicMarko\ConfigurationPanelBundle\Services\ConfigurationService;
+use KunicMarko\SonataConfigurationPanelBundle\Services\ConfigurationService;
 
 class GlobalVariables extends \Twig_Extension
 {
@@ -18,9 +18,9 @@ class GlobalVariables extends \Twig_Extension
 
     public function getGlobals()
     {
-        return array(
+        return [
             'configuration' => $this->configurationService
-        );
+        ];
     }
 
     public function getName()

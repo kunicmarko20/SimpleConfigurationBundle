@@ -1,16 +1,19 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Cache\Warmer;
+namespace KunicMarko\SonataConfigurationPanelBundle\Cache\Warmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Doctrine\ORM\EntityManager;
 use Doctrine\Common\Cache\FilesystemCache;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\DateType;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
 
 class ConfigurationCacheWarmer implements CacheWarmerInterface
 {
+    /** @var EntityManager  */
     private $em;
+    /** @var string */
     private $cacheDirectory;
+
     public function __construct(EntityManager $em, $cacheDirectory)
     {
         $this->em = $em;
@@ -20,12 +23,12 @@ class ConfigurationCacheWarmer implements CacheWarmerInterface
     /**
      * Warms up the cache.
      *
-     * @param string $cacheDir The cache directory
+     * @param string $dir The cache directory
      */
     public function warmUp($dir = null)
     {
         $cacheDriver = new FilesystemCache($this->cacheDirectory);
-        $cacheDriver->save('ConfigurationPanel', $this->getCacheableData());
+        $cacheDriver->save(AbstractConfiguration::CACHE_KEY, $this->getCacheableData());
     }
 
     /**
@@ -43,37 +46,28 @@ class ConfigurationCacheWarmer implements CacheWarmerInterface
         return true;
     }
 
+    /**
+     * Gets data that will be cached
+     * @return array
+     */
     private function getCacheableData()
     {
-        $data = array();
+        $data = [];
+
         foreach ($this->getConfigurationData() as $item) {
-            $cacheKey = $item->getName();
-            // Due to lazy loading, $media will not get initialized,
-            // therefore we need to explicitly get it
-            if (strpos(get_class($item), 'Media') !== false) {
-                $mediaType = $this
-                    ->em
-                    ->getRepository('ConfigurationPanelBundle:Configuration')
-                    ->getMediaTypeById($item->getId());
-                if (!$mediaType) {
-                    $data[$cacheKey] = null;
-                    continue;
-                }
-                $data[$cacheKey] = $mediaType;
-            } elseif ($item instanceof DateType) {
-                $data[$cacheKey] = $item->getDate();
-            } else {
-                $data[$cacheKey] = $item->getValue();
-            }
+            $data[$item->getName()] = $item->getValue();
         }
         return $data;
     }
 
+    /**
+     * @return array|AbstractConfiguration[]
+     */
     public function getConfigurationData()
     {
         return $this
             ->em
-            ->getRepository('ConfigurationPanelBundle:Configuration')
+            ->getRepository('ConfigurationPanelBundle:AbstractConfiguration')
             ->findAll();
     }
 }

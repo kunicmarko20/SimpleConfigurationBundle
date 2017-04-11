@@ -1,21 +1,19 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes;
+namespace KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes;
 
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
-use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\DateType as FormDateType;
 
 /**
 *
-* @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
+* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
 *
 */
-class DateType extends AbstractConfiguration implements TemplateInterface
+class DateType extends AbstractConfiguration
 {
-    use TemplateTrait;
-    private static $template = 'ConfigurationPanelBundle:CRUD:list_field_date.html.twig';
-
     /**
      * @var \DateTime
      *
@@ -26,7 +24,7 @@ class DateType extends AbstractConfiguration implements TemplateInterface
     /**
      * Set date
      *
-     * @param \Date $date
+     * @param \DateTime $date
      *
      * @return DateType
      */
@@ -40,10 +38,36 @@ class DateType extends AbstractConfiguration implements TemplateInterface
     /**
      * Get date
      *
-     * @return \Date
+     * @return \DateTime
      */
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getValue()
+    {
+        return $this->getDate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTemplate()
+    {
+        return 'ConfigurationPanelBundle:CRUD:list_field_date.html.twig';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateFormField(FormMapper $formMapper)
+    {
+        $formMapper->add('date', FormDateType::class, ['required' => false]);
     }
 }

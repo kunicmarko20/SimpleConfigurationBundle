@@ -1,8 +1,7 @@
-Symfony Sonata Configuration Panel
+Sonata Configuration Panel
 ============
-This bundle adds configuration panel to your sonata admin.
+This bundle adds configuration panel to your sonata admin, also you can easily extend bundle and add your own types.
 
-This bundle uses [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorBundle) , be sure to check it out.
 
 This bundle depends on [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle)
 
@@ -12,11 +11,9 @@ Documentation
 
 
 * [Installation](#installation)
-  * [FileType](#filetype)
-  * [MediaType](#mediatype)
 * [How to use](#how-to-use)
+* [Add new type](#add-new-type)
 * [Roles and Categories](#roles-and-categories)
-* [Checkbox and Choice Type](#checkbox-and-choice-type)
 * [Additional stuff](#additional-stuff)
 
 
@@ -33,178 +30,30 @@ composer require kunicmarko/configuration-panel
 ```
 $bundles = array(
     // ...
-    new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
-    new KunicMarko\ConfigurationPanelBundle\ConfigurationPanelBundle(),
+    new KunicMarko\SonataConfigurationPanelBundle\ConfigurationPanelBundle(),
 );
 ```
-
-**3.** Add configuration
+If you are not using auto_mapping add it to your orm mappings
 ```
 # app/config/config.yml
-
-configuration_panel:
-    type: YourBundle\Entity\FileType #or YourBundle\Entity\MediaType
-    upload_directory: uploads #directory in web folder where you want to upload stuff, if you are using Sonata Media, this is not needed
+   orm:
+        entity_managers:
+            default:
+                mappings:
+                    AppBundle: ~
+                    ...
+                    ConfigurationPanelBundle: ~
 ```
 
-**4.** Creating new Type
-
-If you are using Sonata Media and want to use it with configuration panel, then you need to create MediaType, if you don't want to use it then create FileType
-
-## FileType
-
-```
-<?php
-
-namespace YourBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
-use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TemplateInterface;
-
-/**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
-*
-*/
-class FileType extends Configuration implements TemplateInterface
-{
-    use TemplateTrait;
-    private static $template = 'ConfigurationPanelBundle:CRUD:list_field_file.html.twig';
-    /*
-     * Saves old value for removing or update without file.
-     *
-     * @var string
-     */
-    private $oldFile;
-
-    public function setValue($value)
-    {
-        if($this->value !== null){
-            $this->oldFile = $this->value;
-        }
-        $this->value = $value;
-        return $this;
-    }
-
-    public function getOldFile(){
-        return $this->oldFile;
-    }
-
-}
-
-```
-
-## MediaType
-
-```
-<?php
-
-namespace YourBundle\Entity;
-use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
-use KunicMarko\ConfigurationPanelBundle\Traits\TemplateTrait;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TemplateInterface;
-
-/**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
-*
-*/
-class MediaType extends Configuration implements TemplateInterface
-{
-    use TemplateTrait;
-    private static $template = 'ConfigurationPanelBundle:CRUD:list_field_media.html.twig';
-    /**
-     * @var Media
-     *
-     * @ORM\ManyToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"})
-     * @ORM\JoinColumns({
-     *     @ORM\JoinColumn(name="media", referencedColumnName="id", onDelete="SET NULL")
-     * })
-     */
-    private $media;
-
-    /**
-     * Set media
-     *
-     * @param \Application\Sonata\MediaBundle\Entity\Media $media
-     *
-     * @return MediaType
-     */
-    public function setMedia($media)
-    {
-        $this->media = $media;
-    }
-
-    /**
-     * Get media
-     *
-     * @return \Application\Sonata\MediaBundle\Entity\Media
-     */
-    public function getMedia()
-    {
-        return $this->media;
-    }
-
-    public function hydrateMediaObject()
-    {
-        return $this->media;
-    }
-}
-
-```
-Also if using SonataMedia you have to setup context for configuration panel :
-
-```
-# app/config/config.yml
-sonata_media:
-    #...
-    contexts:
-        default:  # the default context is mandatory
-            providers:
-                - sonata.media.provider.dailymotion
-                - sonata.media.provider.youtube
-                - sonata.media.provider.image
-                - sonata.media.provider.file
-                - sonata.media.provider.vimeo
-
-            formats:
-                small: { width: 100 , quality: 70}
-                big:   { width: 500 , quality: 70}
-
-        configuration_panel:  #setup how you want
-            providers:
-                - sonata.media.provider.image
-                - sonata.media.provider.file
-
-            formats:
-                small: { width: 100 , quality: 70}
-                big:   { width: 500 , quality: 70}
-
-```
-after adding new context do not forget to do `app/console sonata:media:fix-media-context`
-
-**5.** Update database
+**3.** Update database
 
 ```
 app/console doctrine:schema:update --force
 ```
 
-**6.** Install Assets
-
-```
-app/console assets:install
-```
-**7.** Clear cache
+**4.** Clear cache
 ```
 app/console cache:clear
-```
-
-If upload folder is not already created:
-```
-mkdir web/uploads
-chmod -R 0777 web/uploads
 ```
 
 ## How to use
@@ -221,56 +70,157 @@ $this->get('configuration_panel.global.service')->getAll()
 $this->get('configuration_panel.global.service')->getValueFor()
 ```
 
+## Add new type
+
+If you want to add new types, you can do it like this
+```
+# app/config/config.yml
+
+configuration_panel:
+    types: 
+        newtype: YourBundle\Entity\NewType
+```
+
+### Creating new Type ### 
+
+Your new type has to extend AbstractConfiguration, you also have to specify template used for sonata list (it can be sonata template, or your own created), and how should field be rendered in form.
+
+**1.** New type without new column
+```
+namespace YourBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+
+/**
+*
+* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+*
+*/
+class NewType extends AbstractConfiguration
+{
+    /**
+     * {@inheritDoc}
+     */
+    public function getTemplate()
+    {
+        return 'SonataAdminBundle:CRUD:list_string.html.twig';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateFormField(FormMapper $formMapper)
+    {
+        $formMapper->add('value', TextType::class, ['required' => false]);
+    }
+}
+
+```
+**2.** New type with new column
+
+As you can see from example code below, we added new `$date` field, the one thing that is necessary is to overwrite `getValue()` method with delegating to your getter for new field as shown below.
+
+```
+
+namespace YourBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use Sonata\AdminBundle\Form\FormMapper;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+
+/**
+*
+* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+*
+*/
+class NewType extends AbstractConfiguration
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="date", nullable=true)
+     */
+    private $date;
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     *
+     * @return DateType
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getDate()
+    {
+        return $this->date;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime
+     */
+    public function getValue()
+    {
+        return $this->getDate();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getTemplate()
+    {
+        //return 'SonataAdminBundle:CRUD:list_string.html.twig'; can also be used 
+        
+        return 'ConfigurationPanelBundle:CRUD:list_field_date.html.twig';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function generateFormField(FormMapper $formMapper)
+    {
+        $formMapper->add('date', DateType::class, ['required' => false]);
+    }
+}
+
+```
+Do not forget to update database after adding new field :
+                                 
+```
+app/console doctrine:schema:update --force
+```
+
 ## Roles and Categories
 
 This bundle was made as help to developers so only `ROLE_SUPER_ADMIN` can create and delete items, regular admins can only edit. ( You can create keys and allow other admins to just edit them ).
 There are 2 categories when creating item, `Meta` and `General`, only `ROLE_SUPER_ADMIN` can see and edit items that are in `META` category while normal admins can only edit and see `General` items.
 
-## Checkbox and Choice Type
-
-![Checkbox](https://cloud.githubusercontent.com/assets/13528674/21304614/c08d54de-c5c6-11e6-91e9-d6df5ced7cec.png)
-
-As you can see there is Options value that is only visible to `ROLE_SUPER_ADMIN`, correct format is :
-```
-value:Label
-value2:label2
-value3:label3
-```
-
-`( Separator is enter key )`
 
 ## Additional stuff
 
-With using this bundle you get access to some twig filters I needed.
+When including this bundle you get access to some twig filters I needed.
 
-**1.** Elapsed
+### Elapsed ###
 
 In twig you can use `|elapsed` filter and you will get human readable time, it works with timestamps or DateTime objects.
 ```
 {{ var|elapsed }}
 
 #outputs "time" ago, 5 days ago, 5 minutes ago, just now, 1 month ago, etc.
-```
-
-**2.** GenerateURL
-
-If you are not using sonataMedia, you can use `|generateURL` to get absolute url to your image
-```
-<img src="{{ var|generateURL }}" />
-```
-
-**3.** isImage
-
-You can also use `|isImage` to check if file is image
-```
-{{ var|isImage }}
-#outputs true or false
-```
-
-Also this bundle depends on [IvoryCKEditorBundle](https://github.com/egeloen/IvoryCKEditorBundle) as we said on beginning so you can use ckeditor as formtype :
-
-```
-use Ivory\CKEditorBundle\Form\Type\CKEditorType;
-
-$builder->add('value', CKEditorType::class);
 ```

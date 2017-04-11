@@ -1,23 +1,28 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\EventListener;
+namespace KunicMarko\SonataConfigurationPanelBundle\EventListener;
 
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\Common\Annotations\AnnotationReader;
-use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
 
 class DiscriminatorMapListener
 {
     /**
      * @var array
      */
-    protected $fileType;
+    protected $additionalTypes;
 
-    public function __construct($fileType)
+    public function __construct(array $additionalTypes)
     {
-        $this->fileType = $fileType;
+        $this->additionalTypes = $additionalTypes;
     }
 
+    /**
+     * Updates discrimantor map with new types
+     *
+     * @param LoadClassMetadataEventArgs $event
+     */
     public function loadClassMetadata(LoadClassMetadataEventArgs $event)
     {
         $metadata = $event->getClassMetadata();
@@ -27,11 +32,12 @@ class DiscriminatorMapListener
         }
 
         $reader = new AnnotationReader;
-        if (null !== $discriminatorMapAnnotation = $reader->getClassAnnotation($class, 'Doctrine\ORM\Mapping\DiscriminatorMap')) {
+        if (null !== $discriminatorMapAnnotation =
+                $reader->getClassAnnotation($class, 'Doctrine\ORM\Mapping\DiscriminatorMap')) {
             $discriminatorMap = $discriminatorMapAnnotation->value;
         }
+        $newDiscriminatorMap = array_merge($discriminatorMap, $this->additionalTypes);
 
-        $discriminatorMap["file"] = $this->fileType;
-        $metadata->setDiscriminatorMap($discriminatorMap);
+        $metadata->setDiscriminatorMap($newDiscriminatorMap);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\DependencyInjection;
+namespace KunicMarko\SonataConfigurationPanelBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -16,8 +16,11 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('configuration_panel');
         $rootNode
             ->children()
-                ->scalarNode('type')->isRequired()->end()
-                ->scalarNode('upload_directory')->defaultValue('uploads')->end()
+                ->arrayNode('types')
+                    ->useAttributeAsKey('name')
+                    ->prototype('scalar')
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

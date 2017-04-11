@@ -1,35 +1,29 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Admin;
+namespace KunicMarko\SonataConfigurationPanelBundle\Admin;
 
-use Ivory\CKEditorBundle\Form\Type\CKEditorType;
 use Knp\Menu\ItemInterface;
+use KunicMarko\SonataConfigurationPanelBundle\Cache\Warmer\ConfigurationCacheWarmer;
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Admin\AdminInterface;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType  as FormChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\TextType as FormTextType;
-use Symfony\Component\Form\Extension\Core\Type\DateType as FormDateType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType as FormEmailType;
-use Symfony\Component\Form\Extension\Core\Type\FileType as FormFileType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\DateType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ChoiceType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\CheckboxType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ColorType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\EmailType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\HtmlType;
-use KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType;
-use KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration;
+use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class ConfigurationAdmin extends AbstractAdmin
 {
+    const ADMIN_ROUTE = 'admin_kunicmarko_sonataconfigurationpanel_abstractconfiguration_list';
+    /** @var AuthorizationChecker */
+    private $authorizationChecker;
+    /** @var ConfigurationCacheWarmer */
+    private $cacheWarmer;
+    /** @var array */
+    private $additionalTypes;
 
-    private $AuthorizationChecker;
-    private $uploadDirectory;
     /**
      * @param DatagridMapper $datagridMapper
      */
@@ -38,7 +32,7 @@ class ConfigurationAdmin extends AbstractAdmin
         $datagridMapper
             ->add('name')
             ->add('value')
-            ->add('category', null, array('show_filter'=>false))
+            ->add('category', null, ['show_filter'=>false])
         ;
     }
     /**
@@ -46,28 +40,29 @@ class ConfigurationAdmin extends AbstractAdmin
      */
     protected function configureListFields(ListMapper $listMapper)
     {
+        // Don't you just hate that mosaic list mode?
         unset($this->listModes['mosaic']);
 
         $listMapper
             ->add('name')
-            ->add('value', null, array('template' => 'ConfigurationPanelBundle:CRUD:list_field_value.html.twig'))
-            ->add('createdAt', null, array('template' => 'ConfigurationPanelBundle:CRUD:list_field_created_at.html.twig'))
-            ->add('_action', null, array(
-                'actions' => array(
-                    'edit' => array(
+            ->add('value', null, ['template' => 'ConfigurationPanelBundle:CRUD:list_field_value.html.twig'])
+            ->add('createdAt', null, ['template' => 'ConfigurationPanelBundle:CRUD:list_field_created_at.html.twig'])
+            ->add('_action', null, [
+                'actions' => [
+                    'edit' => [
                         'template' => 'ConfigurationPanelBundle:CRUD:list_action_edit.html.twig'
-                    ),
-                    'delete' => array(
+                    ],
+                    'delete' => [
                         'template' => 'ConfigurationPanelBundle:CRUD:list_action_delete.html.twig'
-                    ),
-                )
-            ));
+                    ],
+                ]
+            ]);
     }
+
     protected function configureTabMenu(ItemInterface $menu, $action, AdminInterface $childAdmin = null)
     {
-        $routes = array('admin_kunicmarko_configurationpanel_configuration_list');
         $currentRoute = $this->getRequest()->get('_route');
-        if (!in_array($currentRoute, $routes)) {
+        if ($currentRoute != self::ADMIN_ROUTE) {
             return;
         }
         if (!$this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
@@ -82,6 +77,7 @@ class ConfigurationAdmin extends AbstractAdmin
                     ])]);
         }
     }
+
     public function getBatchActions()
     {
         if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
@@ -91,47 +87,46 @@ class ConfigurationAdmin extends AbstractAdmin
 
     public function configureActionButtons($action, $object = null)
     {
-        $list = array();
-        if (in_array($action, array('tree', 'show', 'edit', 'delete', 'list', 'batch'))) {
-            $list['create'] = array(
+        $list = [];
+        if (in_array($action, ['tree', 'show', 'edit', 'delete', 'list', 'batch'])) {
+            $list['create'] = [
                 'template' => 'ConfigurationPanelBundle:CRUD:create_button.html.twig',
-            );
+            ];
         }
-        if (in_array($action, array('show', 'delete', 'acl', 'history')) && $object) {
-            $list['edit'] = array(
+        if (in_array($action, ['show', 'delete', 'acl', 'history']) && $object) {
+            $list['edit'] = [
                 'template' => 'SonataAdminBundle:Button:edit_button.html.twig',
-            );
+            ];
         }
 
-        if (in_array($action, array('show', 'edit', 'acl')) && $object) {
-            $list['history'] = array(
+        if (in_array($action, ['show', 'edit', 'acl']) && $object) {
+            $list['history'] = [
                 'template' => 'SonataAdminBundle:Button:history_button.html.twig',
-            );
+            ];
         }
 
-        if (in_array($action, array('edit', 'history')) && $object) {
-            $list['acl'] = array(
+        if (in_array($action, ['edit', 'history']) && $object) {
+            $list['acl'] = [
                 'template' => 'SonataAdminBundle:Button:acl_button.html.twig',
-            );
+            ];
         }
 
-        if (in_array($action, array('edit', 'history', 'acl')) && $object) {
-            $list['show'] = array(
+        if (in_array($action, ['edit', 'history', 'acl']) && $object) {
+            $list['show'] = [
                 'template' => 'SonataAdminBundle:Button:show_button.html.twig',
-            );
+            ];
         }
 
-        if (in_array($action, array('show', 'edit', 'delete', 'acl', 'batch'))) {
-            $list['list'] = array(
+        if (in_array($action, ['show', 'edit', 'delete', 'acl', 'batch'])) {
+            $list['list'] = [
                 'template' => 'SonataAdminBundle:Button:list_button.html.twig',
-            );
+            ];
         }
         return $list;
     }
 
     public function configure()
     {
-        $this->setTemplate('edit', 'ConfigurationPanelBundle:CRUD:edit.html.twig');
         $this->setTemplate('list', 'ConfigurationPanelBundle:CRUD:list.html.twig');
     }
 
@@ -142,93 +137,26 @@ class ConfigurationAdmin extends AbstractAdmin
     {
         $object = $this->getSubject();
 
-        $class = $this->getClass();
         $formMapper
             ->with('Content');
         if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
             $formMapper
-            ->add('name', FormTextType::class)
-            ->add('category', FormChoiceType::class, ['choices' => AbstractConfiguration::getCategories()]);
+            ->add('name', TextType::class)
+            ->add('category', ChoiceType::class, ['choices' => AbstractConfiguration::getCategories()]);
         }
-        switch ($class) {
-            case TextType::class:
-                $formMapper->add('value', FormTextType::class, ['required' => false]);
-                break;
-            case DateType::class:
-                $formMapper->add('date', FormDateType::class, ['required' => false]);
-                break;
-            case HtmlType::class:
-                $formMapper->add('value', CKEditorType::class, ['required' => false]);
-                break;
-            case EmailType::class:
-                $formMapper->add('value', FormEmailType::class, ['required' => false]);
-                break;
-            case CheckboxType::class:
-                if ($object->formatChoices()) {
-                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false, 'multiple' => true, 'expanded' => true]);
-                }
-            case ChoiceType::class:
-                if ($object->formatChoices() && $class === ChoiceType::class) {
-                    $formMapper->add('value', FormChoiceType::class, ['choices' => $object->formatChoices(), 'required' => false]);
-                }
-                if ($this->getAuthorizationChecker()->isGranted('ROLE_SUPER_ADMIN')) {
-                    $formMapper->add('choices', null, [
-                            'label'=>'Options',
-                            'attr' => [
-                                'placeholder' => "option1:Option1\r\noption2:Option2\r\noption3:Option3"
-                            ]
-                    ]);
-                }
-                break;
-            case BooleanType::class:
-                $formMapper->add('value', FormChoiceType::class, ['required' => false, 'data' => $object->getId() ? $object->getValue() : 0,
-                    'choices' => [
-                        0 => 'no',
-                        1 => 'yes'
-                    ],
-                ]);
-                break;
-            case ColorType::class:
-                $formMapper->add('value', FormTextType::class, ['required' => false,'data' => $object->getId() ? $object->getValue() : '#FF0000','attr' => ['class' => 'colorpicker']]);
-                break;
-            case TextareaType::class:
-                $formMapper->add('value', null, [ 'required' => false ]);
-                break;
-            default:
-                if ($this->checkType('MediaType')) {
-                    $formMapper->add('media', 'sonata_type_model_list', ['required' => false], ['link_parameters' => ['context' => 'configuration_panel']]);
-                    break;
-                }
-                if ($this->checkType('FileType')) {
-                    $formMapper->add('value', FormFileType::class, ['label' => 'File','data_class' => null,'required'=>false]);
-                }
-                break;
-        }
+        $object->generateFormField($formMapper);
     }
 
-    public function prePersist($object)
+    /**
+     * {@inheritdoc}
+     */
+    public function setSubClasses(array $subClasses)
     {
-        if ($this->checkType('FileType')) {
-            if ($object->getValue() === null) {
-                return;
-            }
-            $fileName = $this->uploadFile($object->getValue());
-            $object->setValue($fileName);
-        }
+        $newSubClasses = array_merge($subClasses, $this->getAdditionalTypes());
+
+        parent::setSubClasses($newSubClasses);
     }
-    public function preUpdate($object)
-    {
-        if ($this->checkType('FileType')) {
-            if ($object->getValue() === null) {
-                return $object->setValue($object->getOldFile());
-            }
-            $fileName = $this->uploadFile($object->getValue());
-            if ($object->getOldFile() !== null) {
-                $this->removeFile($object->getOldFile());
-            }
-            $object->setValue($fileName);
-        }
-    }
+
     public function postPersist($object)
     {
         $this->updateCache();
@@ -241,62 +169,46 @@ class ConfigurationAdmin extends AbstractAdmin
 
     public function postRemove($object)
     {
-        if ($this->checkType('FileType') && $object->getValue() !== null) {
-            $this->removeFile($object->getValue());
-        }
         $this->updateCache();
     }
 
+    /**
+     *  Updates cached data
+     */
     public function updateCache()
     {
         $this
-            ->getConfigurationPool()
-            ->getContainer()
-            ->get('configuration_panel.cache.warmer')
+            ->getCacheWarmer()
             ->warmUp();
     }
 
-    public function checkType($type)
+    public function setAuthorizationChecker(AuthorizationChecker $authorizationChecker)
     {
-        return strpos($this->getClass(), $type) !== false ?: false;
-    }
-
-    private function uploadFile($file)
-    {
-        $fileName = md5(uniqid()).'.'.$file->guessExtension();
-        $file->move(
-            $this->getUploadDirectory(),
-            $fileName
-        );
-
-        return $fileName;
-    }
-
-    private function removeFile($file)
-    {
-        $dir = $this->getUploadDirectory();
-        if (file_exists("$dir/$file")) {
-            unlink("$dir/$file");
-        }
-    }
-
-    public function setUploadDirectory($directory)
-    {
-        $this->uploadDirectory = $directory;
-    }
-
-    public function getUploadDirectory()
-    {
-        return $this->uploadDirectory;
-    }
-
-    public function setAuthorizationChecker($AuhtorizationChecker)
-    {
-        $this->AuthorizationChecker = $AuhtorizationChecker;
+        $this->authorizationChecker = $authorizationChecker;
     }
 
     public function getAuthorizationChecker()
     {
-        return $this->AuthorizationChecker;
+        return $this->authorizationChecker;
+    }
+
+    public function setCacheWarmer(ConfigurationCacheWarmer $cacheWarmer)
+    {
+        $this->cacheWarmer = $cacheWarmer;
+    }
+
+    public function getCacheWarmer()
+    {
+        return $this->cacheWarmer;
+    }
+
+    public function setAdditionalTypes(array $additionalTypes)
+    {
+        $this->additionalTypes = $additionalTypes;
+    }
+
+    public function getAdditionalTypes()
+    {
+        return $this->additionalTypes;
     }
 }

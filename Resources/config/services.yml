@@ -1,52 +1,39 @@
-parameters:
-    upload_dir: "%kernel.root_dir%/../web/%configuration_panel.upload_directory%"
 services:
     configuration_panel.admin:
-        class: KunicMarko\ConfigurationPanelBundle\Admin\ConfigurationAdmin
-        arguments: [~, KunicMarko\ConfigurationPanelBundle\Entity\AbstractConfiguration, ConfigurationPanelBundle:ConfigurationAdmin]
+        class: KunicMarko\SonataConfigurationPanelBundle\Admin\ConfigurationAdmin
+        arguments: [~, KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration, ConfigurationPanelBundle:ConfigurationAdmin]
         tags:
             - { name: sonata.admin, manager_type: orm, group: "Configuration Panel", on_top: true , label_catalogue: ~, icon: '<i class="fa fa-sliders"></i>'}
         calls:
-            - [ setSubClasses, [{date : 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\DateType',boolean : 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType',text: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextType',email: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\EmailType',file : %configuration_panel.type%,choice: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ChoiceType',html: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\HtmlType',checkbox : 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\CheckboxType',color: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ColorType',other: 'KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType'}]]
+            - [ setAdditionalTypes, [ "%configuration_panel.types%" ] ]
+            - [ setSubClasses, [{date : 'KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\DateType', boolean : 'KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType', text: 'KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextType', other: 'KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType'}]]
             - [ setAuthorizationChecker, ["@security.authorization_checker"]]
-            - [ setUploadDirectory, ["%upload_dir%"]]
+            - [ setCacheWarmer, [ "@configuration_panel.cache.warmer" ] ]
 
     configuration_panel.global.service:
-        class: KunicMarko\ConfigurationPanelBundle\Services\ConfigurationService
+        class: KunicMarko\SonataConfigurationPanelBundle\Services\ConfigurationService
         arguments: ["%kernel.cache_dir%"]
 
     # Cache
     configuration_panel.cache.warmer:
-        class: KunicMarko\ConfigurationPanelBundle\Cache\Warmer\ConfigurationCacheWarmer
+        class: KunicMarko\SonataConfigurationPanelBundle\Cache\Warmer\ConfigurationCacheWarmer
         arguments: ["@doctrine.orm.entity_manager","%kernel.cache_dir%"]
         tags:
             - { name: kernel.cache_warmer }
 
     configuration_panel.discriminator_map.listener:
-        class: KunicMarko\ConfigurationPanelBundle\EventListener\DiscriminatorMapListener
-        arguments: ["%configuration_panel.type%"]
+        class: KunicMarko\SonataConfigurationPanelBundle\EventListener\DiscriminatorMapListener
+        arguments: ["%configuration_panel.types%"]
         tags:
             - { name: doctrine.event_listener, event: loadClassMetadata }
 
     configuration_panel.twig.extension:
-        class: KunicMarko\ConfigurationPanelBundle\Twig\GlobalVariables
+        class: KunicMarko\SonataConfigurationPanelBundle\Twig\GlobalVariables
         arguments: ["@configuration_panel.global.service"]
         tags:
             - { name: twig.extension }
-    configuration_panel.generate_url.filter:
-        class: KunicMarko\ConfigurationPanelBundle\Twig\GenerateURL
-        public: false
-        arguments: ["@templating.helper.assets","%configuration_panel.upload_directory%"]
-        tags:
-            - { name: twig.extension }
     configuration_panel.elapsed_time.filter:
-        class: KunicMarko\ConfigurationPanelBundle\Twig\ElapsedTime
-        public: false
-        tags:
-            - { name: twig.extension }
-    configuration_panel.is_image.filter:
-        class: KunicMarko\ConfigurationPanelBundle\Twig\IsImage
-        arguments: ["%upload_dir%"]
+        class: KunicMarko\SonataConfigurationPanelBundle\Twig\ElapsedTime
         public: false
         tags:
             - { name: twig.extension }

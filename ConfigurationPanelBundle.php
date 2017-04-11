@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle;
+namespace KunicMarko\SonataConfigurationPanelBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Twig;
+namespace KunicMarko\SonataConfigurationPanelBundle\Twig;
 
 class ElapsedTime extends \Twig_Extension
 {
@@ -8,14 +8,12 @@ class ElapsedTime extends \Twig_Extension
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('elapsed', array($this, 'elapsedTimeFilter')),
+            new \Twig_SimpleFilter('elapsed', [$this, 'elapsedTimeFilter']),
         );
     }
 
     /**
-     * Human readable difference since $dt in past
-     *
-     * @param mixed $timestamp
+     * @param \DateTime|int $timestamp
      * @return string
      */
     public function elapsedTimeFilter($timestamp)
@@ -26,7 +24,7 @@ class ElapsedTime extends \Twig_Extension
 
         $time = time() - $timestamp; // time since that moment
 
-        $tokens = array (
+        $tokens = [
             31536000 => 'year',
             2592000 => 'month',
             604800 => 'week',
@@ -34,7 +32,7 @@ class ElapsedTime extends \Twig_Extension
             3600 => 'hour',
             60 => 'minute',
             1 => 'second'
-        );
+        ];
 
         foreach ($tokens as $unit => $text) {
             // sub-second edge case
@@ -48,6 +46,10 @@ class ElapsedTime extends \Twig_Extension
             return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s ago':' ago');
         }
     }
+
+    /**
+     * @return string
+     */
     public function getName()
     {
         return 'elapsed';

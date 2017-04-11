@@ -1,40 +1,38 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Entity;
+namespace KunicMarko\SonataConfigurationPanelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\ConfigurationPanelBundle\Traits\TimestampableTrait;
+use KunicMarko\SonataConfigurationPanelBundle\Traits\TimestampableTrait;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Sonata\AdminBundle\Form\FormMapper;
 
 /**
  * AbstractConfiguration
  *
- * @ORM\Entity(repositoryClass="KunicMarko\ConfigurationPanelBundle\Repository\ConfigurationRepository")
- * @ORM\Table()
+ * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+ * @ORM\Table(name="configuration_panel")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("name", repositoryMethod="findByUniqueCriteria")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *     "text"     = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextType",
- *     "date"     = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\DateType",
- *     "email"    = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\EmailType",
- *     "boolean"  = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType",
- *     "choice"   = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ChoiceType",
- *     "color"    = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\ColorType",
- *     "html"     = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\HtmlType",
- *     "checkbox" = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\CheckboxType",
- *     "other"    = "KunicMarko\ConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType"
+ *     "text"     = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextType",
+ *     "date"     = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\DateType",
+ *     "boolean"  = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType",
+ *     "other"    = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType"
  * })
  */
 
 abstract class AbstractConfiguration
 {
     use TimestampableTrait;
+
     const META_CATEGORY = 'Meta';
     const GENERAL_CATEGORY = 'General';
     const CATEGORIES = [self::META_CATEGORY, self::GENERAL_CATEGORY];
+    const CACHE_KEY = 'SonataConfigurationPanel';
     /**
      * @var integer
      *
@@ -42,14 +40,14 @@ abstract class AbstractConfiguration
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
@@ -64,7 +62,7 @@ abstract class AbstractConfiguration
      * @Assert\NotBlank()
      * @ORM\Column(name="category", type="string")
      */
-    private $category;
+    protected $category;
 
     /**
      * Get id
@@ -81,7 +79,7 @@ abstract class AbstractConfiguration
      *
      * @param string $name
      *
-     * @return Configuration
+     * @return $this
      */
     public function setName($name)
     {
@@ -105,7 +103,7 @@ abstract class AbstractConfiguration
      *
      * @param string $value
      *
-     * @return Configuration
+     * @return $this
      */
     public function setValue($value)
     {
@@ -137,7 +135,7 @@ abstract class AbstractConfiguration
      *
      * @param string $category
      *
-     * @return Configuration
+     * @return $this
      */
     public function setCategory($category)
     {
@@ -156,9 +154,25 @@ abstract class AbstractConfiguration
         return $this->category;
     }
 
-
+    /**
+     * Returns categories for sonata admin form
+     * @return array
+     */
     public static function getCategories()
     {
         return array_combine(self::CATEGORIES, self::CATEGORIES);
     }
+
+    /**
+     * Get template file used in sonata admin ListMapper
+     * @return string
+     */
+    abstract public function getTemplate();
+
+    /**
+     * * Create form field for sonata create/edit form
+     * @param FormMapper $formMapper
+     * @return void
+     */
+    abstract public function generateFormField(FormMapper $formMapper);
 }

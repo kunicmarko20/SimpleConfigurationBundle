@@ -1,32 +1,18 @@
 <?php
 
-namespace KunicMarko\ConfigurationPanelBundle\Repository;
+namespace KunicMarko\SonataConfigurationPanelBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 
 class ConfigurationRepository extends EntityRepository
 {
-    /**
-     * @param $mediaTypeId
-     * @return mixed
-     */
-    public function getMediaTypeById($mediaTypeId)
-    {
-        $conn = $this->getEntityManager()
-            ->getConnection();
-        $sql = "SELECT m.* FROM configuration c inner join media__media m on c.media = m.id where c.id = :mediaTypeId";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([
-            'mediaTypeId' => $mediaTypeId
-        ]);
-        return $stmt->fetch();
-    }
 
     /**
      * @param string[] $criteria format: array('name' => <name>)
+     * @return \KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration
      */
     public function findByUniqueCriteria(array $criteria)
     {
-        return $this->_em->getRepository('ConfigurationPanelBundle:Configuration')->findBy($criteria);
+        return $this->_em->getRepository('ConfigurationPanelBundle:AbstractConfiguration')->findBy($criteria);
     }
 }
