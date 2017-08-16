@@ -2,6 +2,8 @@
 
 namespace KunicMarko\SonataConfigurationPanelBundle\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+
 trait TimestampableTrait
 {
     /**
