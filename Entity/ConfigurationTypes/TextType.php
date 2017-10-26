@@ -8,14 +8,12 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType as FormTextType;
 
 /**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
-*
-*/
+ * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+ */
 class TextType extends AbstractConfiguration
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
@@ -23,7 +21,7 @@ class TextType extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generateFormField(FormMapper $formMapper)
     {

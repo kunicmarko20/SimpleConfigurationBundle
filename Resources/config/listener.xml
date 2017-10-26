@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="configuration_panel.listener.discriminator_map.class">KunicMarko\SonataConfigurationPanelBundle\EventListener\DiscriminatorMapListener</parameter>
+    </parameters>
+    <services>
+        <service id="configuration_panel.listener.discriminator_map" class="%configuration_panel.listener.discriminator_map.class%">
+            <tag name="doctrine.event_listener" event="loadClassMetadata" />
+            <argument>%configuration_panel.types%</argument>
+        </service>
+    </services>
+</container>

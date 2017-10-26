@@ -1,6 +1,0 @@
-{% if admin.isGranted('DELETE', object) and admin.hasRoute('delete') and is_granted('ROLE_SUPER_ADMIN') %}
-    <a href="{{ admin.generateObjectUrl('delete', object) }}" class="btn btn-sm btn-default delete_link" title="{{ 'action_delete'|trans({}, 'SonataAdminBundle') }}">
-        <i class="fa fa-times"></i>
-        {{ 'action_delete'|trans({}, 'SonataAdminBundle') }}
-    </a>
-{% endif %}

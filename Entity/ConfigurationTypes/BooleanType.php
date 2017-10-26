@@ -8,25 +8,22 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
-*
-*/
+ * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+ */
 class BooleanType extends AbstractConfiguration
 {
-
     /**
-     * Get value
+     * Get value.
      *
-     * @return boolean
+     * @return bool
      */
     public function getValue()
     {
-        return $this->value ? true : false;
+        return (bool) $this->value;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
@@ -34,17 +31,17 @@ class BooleanType extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generateFormField(FormMapper $formMapper)
     {
         $formMapper->add('value', ChoiceType::class, [
             'required' => false,
-            'choices' => [
+            'choices'  => [
                 0 => 'no',
-                1 => 'yes'
+                1 => 'yes',
             ],
-            'data' => (int) $this->getValue()
+            'data' => (int) $this->getValue(),
         ]);
     }
 }

@@ -8,15 +8,12 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType as FormTextAreaType;
 
 /**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
-*
-*/
+ * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+ */
 class TextareaType extends AbstractConfiguration
 {
-
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
@@ -24,10 +21,10 @@ class TextareaType extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generateFormField(FormMapper $formMapper)
     {
-        $formMapper->add('value', FormTextAreaType::class, [ 'required' => false ]);
+        $formMapper->add('value', FormTextAreaType::class, ['required' => false]);
     }
 }

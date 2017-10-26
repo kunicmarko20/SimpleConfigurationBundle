@@ -1,15 +1,5 @@
 {% extends 'SonataAdminBundle:CRUD:base_list.html.twig' %}
 
-{% block table_body %}
-    <tbody>
-        {% for object in admin.datagrid.results if is_granted('ROLE_SUPER_ADMIN') or object.category != constant('META_CATEGORY', object) %}
-            <tr>
-                {% include admin.getTemplate('inner_list_row') %}
-            </tr>
-        {% endfor %}
-    </tbody>
-{% endblock %}
-
 {% block no_result_content %}
      <div class="info-box">
          <span class="info-box-icon bg-aqua"><i class="fa fa-arrow-circle-right" aria-hidden="true"></i></span>

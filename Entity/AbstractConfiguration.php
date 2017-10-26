@@ -3,13 +3,12 @@
 namespace KunicMarko\SonataConfigurationPanelBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\SonataConfigurationPanelBundle\Traits\TimestampableTrait;
+use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
-use Sonata\AdminBundle\Form\FormMapper;
 
 /**
- * AbstractConfiguration
+ * AbstractConfiguration.
  *
  * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
  * @ORM\Table(name="configuration_panel")
@@ -24,17 +23,10 @@ use Sonata\AdminBundle\Form\FormMapper;
  *     "other"    = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType"
  * })
  */
-
 abstract class AbstractConfiguration
 {
-    use TimestampableTrait;
-
-    const META_CATEGORY = 'Meta';
-    const GENERAL_CATEGORY = 'General';
-    const CATEGORIES = [self::META_CATEGORY, self::GENERAL_CATEGORY];
-    const CACHE_KEY = 'SonataConfigurationPanel';
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
@@ -57,17 +49,31 @@ abstract class AbstractConfiguration
     protected $value;
 
     /**
-     * @var string
-     * @Assert\Choice({"Meta", "General"})
-     * @Assert\NotBlank()
-     * @ORM\Column(name="category", type="string")
+     * @var \DateTime
+     * @ORM\Column(type="datetime")
      */
-    protected $category;
+    private $createdAt;
 
     /**
-     * Get id
+     * @var \DateTime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Get id.
      *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -75,7 +81,7 @@ abstract class AbstractConfiguration
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      *
@@ -89,7 +95,7 @@ abstract class AbstractConfiguration
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -99,7 +105,7 @@ abstract class AbstractConfiguration
     }
 
     /**
-     * Set value
+     * Set value.
      *
      * @param string $value
      *
@@ -108,11 +114,12 @@ abstract class AbstractConfiguration
     public function setValue($value)
     {
         $this->value = $value;
+
         return $this;
     }
 
     /**
-     * Get value
+     * Get value.
      *
      * @return string
      */
@@ -123,55 +130,39 @@ abstract class AbstractConfiguration
 
     public function __toString()
     {
-
-        if ($this->getName()) {
-            return $this->getName();
-        }
-        return 'New Item';
+        return $this->name !== null ?
+            $this->name :
+            'New Item';
     }
 
     /**
-     * Set category
-     *
-     * @param string $category
-     *
-     * @return $this
+     * @ORM\PrePersist
      */
-    public function setCategory($category)
+    public function prePersist()
     {
-        $this->category = $category;
-
-        return $this;
+        $this->createdAt = $this->updatedAt = new \DateTime();
     }
 
     /**
-     * Get category
+     * @ORM\PreUpdate
+     */
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    /**
+     * Get template file used in sonata admin ListMapper.
      *
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
-    }
-
-    /**
-     * Returns categories for sonata admin form
-     * @return array
-     */
-    public static function getCategories()
-    {
-        return array_combine(self::CATEGORIES, self::CATEGORIES);
-    }
-
-    /**
-     * Get template file used in sonata admin ListMapper
      * @return string
      */
     abstract public function getTemplate();
 
     /**
-     * * Create form field for sonata create/edit form
+     * * Create form field for sonata create/edit form.
+     *
      * @param FormMapper $formMapper
+     *
      * @return void
      */
     abstract public function generateFormField(FormMapper $formMapper);
