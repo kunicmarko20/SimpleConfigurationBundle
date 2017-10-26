@@ -8,10 +8,8 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\DateType as FormDateType;
 
 /**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
-*
-*/
+ * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+ */
 class DateType extends AbstractConfiguration
 {
     /**
@@ -22,7 +20,7 @@ class DateType extends AbstractConfiguration
     private $date;
 
     /**
-     * Set date
+     * Set date.
      *
      * @param \DateTime $date
      *
@@ -36,7 +34,7 @@ class DateType extends AbstractConfiguration
     }
 
     /**
-     * Get date
+     * Get date.
      *
      * @return \DateTime
      */
@@ -46,7 +44,7 @@ class DateType extends AbstractConfiguration
     }
 
     /**
-     * Get date
+     * Get date.
      *
      * @return \DateTime
      */
@@ -56,7 +54,7 @@ class DateType extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTemplate()
     {
@@ -64,7 +62,7 @@ class DateType extends AbstractConfiguration
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function generateFormField(FormMapper $formMapper)
     {

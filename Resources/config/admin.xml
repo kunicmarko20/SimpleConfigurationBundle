@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <!-- COMMON -->
+        <parameter key="configuration_panel.admin.groupname">Configuration</parameter>
+        <!-- Configuration -->
+        <parameter key="configuration_panel.admin.configuration.class">KunicMarko\SonataConfigurationPanelBundle\Admin\ConfigurationAdmin</parameter>
+        <parameter key="configuration_panel.admin.configuration.controller">SonataAdminBundle:CRUD</parameter>
+        <parameter key="configuration_panel.admin.configuration.entity">KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration</parameter>
+    </parameters>
+    <services>
+        <service id="configuration_panel.admin.configuration" class="%configuration_panel.admin.configuration.class%">
+            <tag name="sonata.admin" manager_type="orm" group="%configuration_panel.admin.groupname%" label="Configuration" />
+            <argument/>
+            <argument>%configuration_panel.admin.configuration.entity%</argument>
+            <argument>%configuration_panel.admin.configuration.controller%</argument>
+            <call method="setCustomSubClasses">
+                <argument type="collection">
+                    <argument key="date">KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\DateType</argument>
+                    <argument key="boolean">KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType</argument>
+                    <argument key="text">KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextType</argument>
+                    <argument key="other">KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType</argument>
+                </argument>
+                <argument>%configuration_panel.types%</argument>
+            </call>
+        </service>
+     </services>
+</container>
