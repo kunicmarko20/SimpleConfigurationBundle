@@ -30,7 +30,7 @@ composer require kunicmarko/configuration-panel
 ```
 $bundles = array(
     // ...
-    new KunicMarko\SonataConfigurationPanelBundle\ConfigurationPanelBundle(),
+    new KunicMarko\SimpleConfigurationBundle\ConfigurationPanelBundle(),
 );
 ```
 If you are not using auto_mapping add it to your orm mappings
@@ -83,23 +83,23 @@ configuration_panel:
 
 ### Creating new Type ### 
 
-Your new type has to extend AbstractConfiguration, you also have to specify template used for sonata list (it can be sonata template, or your own created), and how should field be rendered in form.
+Your new type has to extend AbstractConfigurationType, you also have to specify template used for sonata list (it can be sonata template, or your own created), and how should field be rendered in form.
 
 **1.** New type without new column
 ```
 namespace YourBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 /**
 *
-* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+* @ORM\Entity(repositoryClass="KunicMarko\SimpleConfigurationBundle\Repository\ConfigurationRepository")
 *
 */
-class NewType extends AbstractConfiguration
+class NewType extends AbstractConfigurationType
 {
     /**
      * {@inheritDoc}
@@ -128,16 +128,16 @@ As you can see from example code below, we added new `$date` field, the one thin
 namespace YourBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
 /**
 *
-* @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+* @ORM\Entity(repositoryClass="KunicMarko\SimpleConfigurationBundle\Repository\ConfigurationRepository")
 *
 */
-class NewType extends AbstractConfiguration
+class NewType extends AbstractConfigurationType
 {
     /**
      * @var \DateTime

@@ -1,8 +1,8 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\Service;
+namespace KunicMarko\SimpleConfigurationBundle\Service;
 
-use KunicMarko\SonataConfigurationPanelBundle\Repository\FindConfigurations;
+use KunicMarko\SimpleConfigurationBundle\Repository\FindConfigurations;
 
 class ConfigurationService
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\Entity;
+namespace KunicMarko\SimpleConfigurationBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Sonata\AdminBundle\Form\FormMapper;
@@ -8,22 +8,22 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * AbstractConfiguration.
+ * AbstractConfigurationType.
  *
- * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
- * @ORM\Table(name="configuration_panel")
+ * @ORM\Entity(repositoryClass="KunicMarko\SimpleConfigurationBundle\Repository\ConfigurationRepository")
+ * @ORM\Table(name="simple_configuration")
  * @ORM\HasLifecycleCallbacks()
  * @UniqueEntity("name", repositoryMethod="findByUniqueCriteria")
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *     "text"     = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextType",
- *     "date"     = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\DateType",
- *     "boolean"  = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\BooleanType",
- *     "other"    = "KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes\TextareaType"
+ *     "text"     = "KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\TextType",
+ *     "date"     = "KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\DateType",
+ *     "boolean"  = "KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\BooleanType",
+ *     "other"    = "KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\TextareaType"
  * })
  */
-abstract class AbstractConfiguration
+abstract class AbstractConfigurationType
 {
     /**
      * @var int

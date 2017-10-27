@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\DependencyInjection;
+namespace KunicMarko\SimpleConfigurationBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

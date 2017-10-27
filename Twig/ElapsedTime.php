@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\Twig;
+namespace KunicMarko\SimpleConfigurationBundle\Twig;
 
 class ElapsedTime extends \Twig_Extension
 {

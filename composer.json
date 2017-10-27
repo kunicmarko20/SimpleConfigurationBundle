@@ -1,6 +1,6 @@
 {
-    "name": "kunicmarko/configuration-panel",
-    "description": "This is a Symfony Bundle that adds configuration panel to your sonata admin.",
+    "name": "kunicmarko/simple-configuration-bundle",
+    "description": "This is a Symfony Bundle that adds key:value storage to your Sonata admin.",
     "type": "symfony-bundle",
     "authors": [
         {
@@ -10,21 +10,22 @@
         }
     ],
 
-    "keywords": ["sonata admin","sonata", "symfony", "bundle","symfony configuration panel"],
+    "keywords": ["sonata admin","sonata", "symfony", "bundle", "symfony key:value storage bundle"],
     "homepage": "https://github.com/kunicmarko20/configuration-panel",
     "license": "MIT",
     "require": {
         "php": "^5.6|^7.0",
-        "symfony/framework-bundle": "~2.8|~3.0"
+        "symfony/framework-bundle": "~2.8|~3.0",
+        "sonata-project/admin-bundle": "^3.2"
     },
     "autoload": {
         "psr-4": {
-            "KunicMarko\\SonataConfigurationPanelBundle\\": ""
+            "KunicMarko\\SimpleConfigurationBundle\\": ""
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0.x-dev"
+            "dev-master": "1.0.x-dev"
         }
     }
 }

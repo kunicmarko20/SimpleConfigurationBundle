@@ -1,11 +1,11 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\EventListener;
+namespace KunicMarko\SimpleConfigurationBundle\EventListener;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Event\LoadClassMetadataEventArgs;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
-use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 
 class DiscriminatorMapListener
 {
@@ -29,7 +29,7 @@ class DiscriminatorMapListener
         $metadata = $event->getClassMetadata();
         $class = $metadata->getReflectionClass();
 
-        if ($class->getName() !== AbstractConfiguration::class) {
+        if ($class->getName() !== AbstractConfigurationType::class) {
             return;
         }
 

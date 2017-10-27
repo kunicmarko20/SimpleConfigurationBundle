@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\Admin;
+namespace KunicMarko\SimpleConfigurationBundle\Admin;
 
 use Sonata\AdminBundle\Admin\AbstractAdmin;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
