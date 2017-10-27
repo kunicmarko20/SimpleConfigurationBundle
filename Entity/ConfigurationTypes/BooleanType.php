@@ -14,7 +14,7 @@ class BooleanType extends AbstractConfigurationType
 {
     public function getValue() : bool
     {
-        return (bool)$this->value;
+        return (bool) $this->value;
     }
 
     /**
