@@ -9,22 +9,17 @@ use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 
 class DiscriminatorMapListener
 {
-    /**
-     * @var array
-     */
-    protected $additionalTypes;
+    private $types;
 
-    public function __construct(array $additionalTypes)
+    public function __construct(array $types)
     {
-        $this->additionalTypes = $additionalTypes;
+        $this->types = $types;
     }
 
     /**
      * Updates discrimantor map with new types.
-     *
-     * @param LoadClassMetadataEventArgs $event
      */
-    public function loadClassMetadata(LoadClassMetadataEventArgs $event)
+    public function loadClassMetadata(LoadClassMetadataEventArgs $event) : void
     {
         $metadata = $event->getClassMetadata();
         $class = $metadata->getReflectionClass();
@@ -35,12 +30,13 @@ class DiscriminatorMapListener
 
         $reader = new AnnotationReader();
 
-        if (null !== $discriminatorMapAnnotation =
-                $reader->getClassAnnotation($class, DiscriminatorMap::class)) {
-            $discriminatorMap = $discriminatorMapAnnotation->value;
+        $discriminatorMapAnnotation = $reader->getClassAnnotation($class, DiscriminatorMap::class);
+
+        if ($discriminatorMapAnnotation !== null) {
+            return;
         }
 
-        $newDiscriminatorMap = array_merge($discriminatorMap, $this->additionalTypes);
+        $newDiscriminatorMap = array_merge($discriminatorMapAnnotation->value, $this->types);
 
         $metadata->setDiscriminatorMap($newDiscriminatorMap);
     }

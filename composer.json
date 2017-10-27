@@ -1,6 +1,6 @@
 {
     "name": "kunicmarko/simple-configuration-bundle",
-    "description": "This is a Symfony Bundle that adds key:value storage to your Sonata admin.",
+    "description": "This is a Symfony Bundle that adds key value storage to your Sonata admin.",
     "type": "symfony-bundle",
     "authors": [
         {
@@ -11,10 +11,10 @@
     ],
 
     "keywords": ["sonata admin","sonata", "symfony", "bundle", "symfony key:value storage bundle"],
-    "homepage": "https://github.com/kunicmarko20/configuration-panel",
+    "homepage": "https://github.com/kunicmarko20/simple-configuration-bundle",
     "license": "MIT",
     "require": {
-        "php": "^5.6|^7.0",
+        "php": "^7.1",
         "symfony/framework-bundle": "~2.8|~3.0",
         "sonata-project/admin-bundle": "^3.2"
     },

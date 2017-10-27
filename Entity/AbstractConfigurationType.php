@@ -36,7 +36,8 @@ abstract class AbstractConfigurationType
 
     /**
      * @var string
-     * @Assert\NotBlank()
+     *
+     * @Assert\NotNull()
      * @ORM\Column(name="name", type="string", length=255, unique=true)
      */
     protected $name;
@@ -44,7 +45,8 @@ abstract class AbstractConfigurationType
     /**
      * @var string
      *
-     * @ORM\Column(name="value", type="text", nullable=true)
+     * @Assert\NotNull()
+     * @ORM\Column(name="value", type="text")
      */
     protected $value;
 
@@ -56,89 +58,59 @@ abstract class AbstractConfigurationType
 
     /**
      * @var \DateTime
+     *
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $updatedAt;
 
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId() : ?int
     {
         return $this->id;
     }
 
-    /**
-     * Set name.
-     *
-     * @param string $name
-     *
-     * @return $this
-     */
-    public function setName($name)
+    public function setName(string $name) : self
     {
         $this->name = $name;
 
         return $this;
     }
 
-    /**
-     * Get name.
-     *
-     * @return string
-     */
-    public function getName()
+    public function getName() : ?string
     {
         return $this->name;
     }
 
-    /**
-     * Set value.
-     *
-     * @param string $value
-     *
-     * @return $this
-     */
-    public function setValue($value)
+    public function setValue($value) : self
     {
         $this->value = $value;
 
         return $this;
     }
 
-    /**
-     * Get value.
-     *
-     * @return string
-     */
     public function getValue()
     {
         return $this->value;
     }
 
-    public function __toString()
+    public function getCreatedAt() : ?\DateTime
     {
-        return $this->name !== null ?
-            $this->name :
-            'New Item';
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt() : ?\DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function __toString() : string
+    {
+        return $this->name ?? 'New Item';
     }
 
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist() : void
     {
         $this->createdAt = $this->updatedAt = new \DateTime();
     }
@@ -146,24 +118,18 @@ abstract class AbstractConfigurationType
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate() : void
     {
         $this->updatedAt = new \DateTime();
     }
 
     /**
      * Get template file used in sonata admin ListMapper.
-     *
-     * @return string
      */
-    abstract public function getTemplate();
+    abstract public function getTemplate() : string;
 
     /**
-     * * Create form field for sonata create/edit form.
-     *
-     * @param FormMapper $formMapper
-     *
-     * @return void
+     * Create form field for sonata create/edit form.
      */
-    abstract public function generateFormField(FormMapper $formMapper);
+    abstract public function generateFormField(FormMapper $formMapper) : void;
 }

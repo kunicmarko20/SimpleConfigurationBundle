@@ -1,6 +1,6 @@
-Sonata Configuration Panel
+Simple Configuration Bundle
 ============
-This bundle adds configuration panel to your sonata admin, also you can easily extend bundle and add your own types.
+This bundle adds key:value storage to your sonata admin, also you can easily extend bundle and add your own types.
 
 
 This bundle depends on [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle)
@@ -22,7 +22,7 @@ Documentation
 **1.**  Add to composer.json to the `require` key
 
 ```
-composer require kunicmarko/configuration-panel
+composer require kunicmarko/simple-configuration-bundle
 ```
 
 **2.** Register the bundle in ``app/AppKernel.php``
@@ -30,7 +30,7 @@ composer require kunicmarko/configuration-panel
 ```
 $bundles = array(
     // ...
-    new KunicMarko\SimpleConfigurationBundle\ConfigurationPanelBundle(),
+    new KunicMarko\SimpleConfigurationBundle\SimpleConfigurationBundle(),
 );
 ```
 If you are not using auto_mapping add it to your orm mappings
@@ -42,7 +42,7 @@ If you are not using auto_mapping add it to your orm mappings
                 mappings:
                     AppBundle: ~
                     ...
-                    ConfigurationPanelBundle: ~
+                    SimpleConfigurationBundle: ~
 ```
 
 **3.** Update database
@@ -60,14 +60,14 @@ app/console cache:clear
 
 In your twig template you can call it like :
 ```
-{{ configuration.getAll() }}
-{{ configuration.getValueFor(name) }}
+{{ simple_configuration.getAll() }}
+{{ simple_configuration.getValueFor('name') }}
 ```
 
 if you want to use it in controller you can do :
 ```
-$this->get('configuration_panel.global.service')->getAll()
-$this->get('configuration_panel.global.service')->getValueFor()
+$this->get('simple_configuration.service.configuration')->getAll()
+$this->get('simple_configuration.service.configuration')->getValueFor('name')
 ```
 
 ## Add new type
@@ -76,7 +76,7 @@ If you want to add new types, you can do it like this
 ```
 # app/config/config.yml
 
-configuration_panel:
+simple_configuration:
     types: 
         newtype: YourBundle\Entity\NewType
 ```
@@ -104,7 +104,7 @@ class NewType extends AbstractConfigurationType
     /**
      * {@inheritDoc}
      */
-    public function getTemplate()
+    public function getTemplate() : string
     {
         return 'SonataAdminBundle:CRUD:list_string.html.twig';
     }
@@ -112,7 +112,7 @@ class NewType extends AbstractConfigurationType
     /**
      * {@inheritDoc}
      */
-    public function generateFormField(FormMapper $formMapper)
+    public function generateFormField(FormMapper $formMapper) : void
     {
         $formMapper->add('value', TextType::class, ['required' => false]);
     }
@@ -146,36 +146,19 @@ class NewType extends AbstractConfigurationType
      */
     private $date;
 
-    /**
-     * Set date
-     *
-     * @param \DateTime $date
-     *
-     * @return DateType
-     */
-    public function setDate($date)
+    public function setDate(?\DateTime $date) : self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    /**
-     * Get date
-     *
-     * @return \DateTime
-     */
-    public function getDate()
+    public function getDate() : ?\DateTime
     {
         return $this->date;
     }
 
-    /**
-     * Get date
-     *
-     * @return \DateTime
-     */
-    public function getValue()
+    public function getValue() : ?\DateTime
     {
         return $this->getDate();
     }
@@ -183,7 +166,7 @@ class NewType extends AbstractConfigurationType
     /**
      * {@inheritDoc}
      */
-    public function getTemplate()
+    public function getTemplate() : string
     {
         //return 'SonataAdminBundle:CRUD:list_string.html.twig'; can also be used 
         
@@ -193,7 +176,7 @@ class NewType extends AbstractConfigurationType
     /**
      * {@inheritDoc}
      */
-    public function generateFormField(FormMapper $formMapper)
+    public function generateFormField(FormMapper $formMapper) : void
     {
         $formMapper->add('date', DateType::class, ['required' => false]);
     }
@@ -205,12 +188,6 @@ Do not forget to update database after adding new field :
 ```
 app/console doctrine:schema:update --force
 ```
-
-## Roles and Categories
-
-This bundle was made as help to developers so only `ROLE_SUPER_ADMIN` can create and delete items, regular admins can only edit. ( You can create keys and allow other admins to just edit them ).
-There are 2 categories when creating item, `Meta` and `General`, only `ROLE_SUPER_ADMIN` can see and edit items that are in `META` category while normal admins can only edit and see `General` items.
-
 
 ## Additional stuff
 

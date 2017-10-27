@@ -14,7 +14,7 @@ final class FindConfigurations
         $this->entityManager = $entityManager;
     }
 
-    public function __invoke()
+    public function __invoke() : array
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('c')
