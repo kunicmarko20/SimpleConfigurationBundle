@@ -36,7 +36,7 @@ class ConfigurationService
     public function getValueFor($name)
     {
         if (!array_key_exists($name, self::$config)) {
-            return null;
+            return;
         }
 
         return self::$config[$name];
