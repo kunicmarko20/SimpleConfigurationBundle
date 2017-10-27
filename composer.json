@@ -10,7 +10,7 @@
         }
     ],
 
-    "keywords": ["sonata admin","sonata", "symfony", "bundle", "symfony key:value storage bundle"],
+    "keywords": ["sonata admin","sonata", "symfony", "bundle", "key value storage"],
     "homepage": "https://github.com/kunicmarko20/simple-configuration-bundle",
     "license": "MIT",
     "require": {

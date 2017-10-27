@@ -1,5 +1,10 @@
 Simple Configuration Bundle
 ============
+
+[![Build Status](https://travis-ci.org/kunicmarko20/SimpleConfigurationBundle.svg?branch=master)](https://travis-ci.org/kunicmarko20/SimpleConfigurationBundle)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/4b9c511d-3a09-442e-b882-db7da663bf11/mini.png)](https://insight.sensiolabs.com/projects/4b9c511d-3a09-442e-b882-db7da663bf11)
+[![StyleCI](https://styleci.io/repos/108571141/shield)](https://styleci.io/repos/108571141)
+
 This bundle adds key:value storage to your sonata admin, also you can easily extend bundle and add your own types.
 
 
