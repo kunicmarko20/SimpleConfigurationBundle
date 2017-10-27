@@ -1,14 +1,24 @@
 language: php
+
 php:
-  - '7.0'
+  - '7.1'
+  - nightly
 
-before_script:
-  - export PATH="$PATH:$HOME/.composer/vendor/bin"
-  - composer global require "squizlabs/php_codesniffer"
+install: .travis/install.sh
+script: .travis/script.sh
+after_success: .travis/success.sh
 
-script:
-  - phpcs --extensions=php --standard=psr2 .
+matrix:
+  fast_finish: true
+  include:
+    - php: '7.1'
+      env: SYMFONY=2.8.*
+    - php: '7.1'
+      env: SYMFONY=3.1.*
+    - php: '7.1'
+      env: SYMFONY=3.2.*
+    - php: '7.1'
+      env: SYMFONY=3.3.*
 
-notifications:
-  email:
-    on_failure: always
+  allow_failures:
+    - php: nightly

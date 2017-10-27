@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
-        <parameter key="simple_configuration.service.configuration.class">KunicMarko\SimpleConfigurationBundle\Services\ConfigurationService</parameter>
+        <parameter key="simple_configuration.validator.unique_name.class">KunicMarko\SimpleConfigurationBundle\Validator\Constraints\UniqueNameValidator</parameter>
     </parameters>
     <services>
-        <service id="simple_configuration.service.configuration" class="%simple_configuration.service.configuration.class%">
+        <service id="simple_configuration.validator.unique_name" class="%simple_configuration.validator.unique_name.class%">
             <argument type="service" id="simple_configuration.repository.configuration" />
+            <tag name="validator.constraint_validator" />
         </service>
-        <service id="simple_configuration.annotation_reader" class="Doctrine\Common\Annotations\AnnotationReader"/>
     </services>
 </container>

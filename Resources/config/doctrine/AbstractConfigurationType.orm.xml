@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType"
+          table="simple_configuration"
+          inheritance-type="SINGLE_TABLE">
+
+    <discriminator-column name="type" type="string" />
+    <discriminator-map>
+      <discriminator-mapping value="text" class="KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\TextType" />
+      <discriminator-mapping value="boolean" class="KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\BooleanType" />
+      <discriminator-mapping value="other" class="KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\OtherType" />
+    </discriminator-map>
+
+    <id name="id" type="integer" column="id">
+      <generator strategy="AUTO"/>
+    </id>
+
+    <field name="name" type="string" column="name" length="255" unique="true" />
+    <field name="value" type="text" column="value" />
+    <field name="createdAt" type="datetime" column="created_at" />
+    <field name="updatedAt" type="datetime" column="updated_at" />
+
+    <lifecycle-callbacks>
+      <lifecycle-callback type="prePersist" method="prePersist"/>
+      <lifecycle-callback type="preUpdate" method="preUpdate"/>
+    </lifecycle-callbacks>
+
+  </entity>
+</doctrine-mapping>

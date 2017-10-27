@@ -3,6 +3,6 @@
 {%- block field %}
     {{ object.getCreatedAt|date("M d. Y") }}
     {% if object.getUpdatedAt %}
-        <br/><small><em>(edited {{ object.getUpdatedAt|elapsed }})</em></small>
+        <br/><small><em>({{ 'label.edited'|trans({}, 'SimpleConfigurationBundle') }} {{ object.getUpdatedAt|elapsed }})</em></small>
     {% endif %}
 {% endblock -%}

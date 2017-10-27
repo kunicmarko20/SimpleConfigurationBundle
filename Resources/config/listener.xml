@@ -6,6 +6,7 @@
     <services>
         <service id="simple_configuration.listener.discriminator_map" class="%simple_configuration.listener.discriminator_map.class%">
             <tag name="doctrine.event_listener" event="loadClassMetadata" />
+            <argument type="service" id="simple_configuration.annotation_reader" />
             <argument>%simple_configuration.types%</argument>
         </service>
     </services>

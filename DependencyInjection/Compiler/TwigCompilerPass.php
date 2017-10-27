@@ -1,6 +1,6 @@
 <?php
 
-namespace KunicMarko\ColorPickerBundle\DependencyInjection\Compiler;
+namespace KunicMarko\SimpleConfigurationBundle\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

@@ -10,10 +10,12 @@ use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 class DiscriminatorMapListener
 {
     private $types;
+    private $annotationReader;
 
-    public function __construct(array $types)
+    public function __construct(AnnotationReader $annotationReader, array $types)
     {
         $this->types = $types;
+        $this->annotationReader = $annotationReader;
     }
 
     /**
@@ -28,11 +30,9 @@ class DiscriminatorMapListener
             return;
         }
 
-        $reader = new AnnotationReader();
+        $discriminatorMapAnnotation = $this->annotationReader->getClassAnnotation($class, DiscriminatorMap::class);
 
-        $discriminatorMapAnnotation = $reader->getClassAnnotation($class, DiscriminatorMap::class);
-
-        if ($discriminatorMapAnnotation !== null) {
+        if ($discriminatorMapAnnotation === null) {
             return;
         }
 

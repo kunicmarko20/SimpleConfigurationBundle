@@ -4,6 +4,7 @@ Simple Configuration Bundle
 [![Build Status](https://travis-ci.org/kunicmarko20/SimpleConfigurationBundle.svg?branch=master)](https://travis-ci.org/kunicmarko20/SimpleConfigurationBundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/4b9c511d-3a09-442e-b882-db7da663bf11/mini.png)](https://insight.sensiolabs.com/projects/4b9c511d-3a09-442e-b882-db7da663bf11)
 [![StyleCI](https://styleci.io/repos/108571141/shield)](https://styleci.io/repos/108571141)
+[![Coverage Status](https://coveralls.io/repos/github/kunicmarko20/SimpleConfigurationBundle/badge.svg)](https://coveralls.io/github/kunicmarko20/SimpleConfigurationBundle)
 
 This bundle adds key:value storage to your sonata admin, also you can easily extend bundle and add your own types.
 
@@ -94,16 +95,10 @@ Your new type has to extend AbstractConfigurationType, you also have to specify 
 ```
 namespace YourBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
 use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-/**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\SimpleConfigurationBundle\Repository\ConfigurationRepository")
-*
-*/
 class NewType extends AbstractConfigurationType
 {
     /**
@@ -137,11 +132,6 @@ use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 
-/**
-*
-* @ORM\Entity(repositoryClass="KunicMarko\SimpleConfigurationBundle\Repository\ConfigurationRepository")
-*
-*/
 class NewType extends AbstractConfigurationType
 {
     /**
@@ -175,7 +165,7 @@ class NewType extends AbstractConfigurationType
     {
         //return 'SonataAdminBundle:CRUD:list_string.html.twig'; can also be used 
         
-        return 'ConfigurationPanelBundle:CRUD:list_field_date.html.twig';
+        return 'SimpleConfigurationBundle:CRUD:list_field_date.html.twig';
     }
 
     /**
