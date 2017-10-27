@@ -112,7 +112,7 @@ abstract class AbstractConfigurationType
      */
     public function prePersist() : void
     {
-        $this->createdAt = $this->updatedAt = new \DateTime;
+        $this->createdAt = $this->updatedAt = new \DateTime();
     }
 
     /**
@@ -120,11 +120,11 @@ abstract class AbstractConfigurationType
      */
     public function preUpdate() : void
     {
-        $this->updatedAt = new \DateTime;
+        $this->updatedAt = new \DateTime();
     }
 
     /**
-     * Get template file used in sonata admin ListMapper
+     * Get template file used in sonata admin ListMapper.
      */
     abstract public function getTemplate() : string;
 
