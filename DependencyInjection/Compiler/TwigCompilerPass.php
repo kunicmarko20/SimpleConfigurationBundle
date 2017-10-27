@@ -16,7 +16,7 @@ class TwigCompilerPass implements CompilerPassInterface
             $container->setParameter(
                 $parameter,
                 array_merge(
-                    ['configuration' => '@configuration_panel.service.configuration'],
+                    ['simple_configuration' => '@simple_configuration.service.configuration'],
                     $container->getParameter($parameter)
                 )
             );

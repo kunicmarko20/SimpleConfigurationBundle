@@ -4,6 +4,16 @@ namespace KunicMarko\SimpleConfigurationBundle\Twig;
 
 class ElapsedTime extends \Twig_Extension
 {
+    const TIME_UNITS = [
+        31536000 => 'year',
+        2592000  => 'month',
+        604800   => 'week',
+        86400    => 'day',
+        3600     => 'hour',
+        60       => 'minute',
+        1        => 'second',
+    ];
+
     public function getFilters()
     {
         return [
@@ -16,35 +26,39 @@ class ElapsedTime extends \Twig_Extension
      *
      * @return string
      */
-    public function elapsed($timestamp)
+    public function elapsed($timestamp) : string
+    {
+        $time = $this->getTimeSinceThatMoment($timestamp);
+
+        return $this->formatTime($time);
+    }
+
+    private function getTimeSinceThatMoment($timestamp) : int
     {
         if ($timestamp instanceof \DateTime) {
-            $timestamp = $timestamp->getTimestamp();
+            return time() - $timestamp->getTimestamp();
         }
 
-        $time = time() - $timestamp; // time since that moment
+        return time() - $timestamp;
+    }
 
-        $tokens = [
-            31536000 => 'year',
-            2592000  => 'month',
-            604800   => 'week',
-            86400    => 'day',
-            3600     => 'hour',
-            60       => 'minute',
-            1        => 'second',
-        ];
-
-        foreach ($tokens as $unit => $text) {
+    private function formatTime(int $time) : string
+    {
+        foreach (self::TIME_UNITS as $unit => $text) {
             // sub-second edge case
             if ($time < 1) {
                 return 'just now';
             }
+
             if ($time < $unit) {
                 continue;
             }
+
             $numberOfUnits = floor($time / $unit);
 
-            return $numberOfUnits.' '.$text.(($numberOfUnits > 1) ? 's ago' : ' ago');
+            return $numberOfUnits > 1 ?
+                "$numberOfUnits {$text}s ago" :
+                "$numberOfUnits {$text} ago";
         }
     }
 }

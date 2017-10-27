@@ -6,34 +6,24 @@ use KunicMarko\SimpleConfigurationBundle\Repository\FindConfigurations;
 
 class ConfigurationService
 {
-    /** @var array */
-    private static $config = null;
+    private static $config = [];
 
     public function __construct(FindConfigurations $findConfigurations)
     {
-        if (self::$config === null) {
+        if (empty(self::$config)) {
             self::$config = $findConfigurations();
         }
     }
 
-    /**
-     * Get All Values.
-     *
-     * @return array
-     */
-    public function getAll()
+    public function getAll() : array
     {
         return self::$config;
     }
 
     /**
-     * Get One value.
-     *
-     * @param string $name
-     *
      * @return mixed
      */
-    public function getValueFor($name)
+    public function getValueFor(string $name)
     {
         if (!array_key_exists($name, self::$config)) {
             return;

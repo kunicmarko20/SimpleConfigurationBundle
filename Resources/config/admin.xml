@@ -2,25 +2,25 @@
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <parameters>
         <!-- COMMON -->
-        <parameter key="configuration_panel.admin.groupname">Configuration</parameter>
+        <parameter key="simple_configuration.admin.groupname">Configuration</parameter>
         <!-- Configuration -->
-        <parameter key="configuration_panel.admin.configuration.class">KunicMarko\SimpleConfigurationBundle\Admin\ConfigurationAdmin</parameter>
-        <parameter key="configuration_panel.admin.configuration.controller">SonataAdminBundle:CRUD</parameter>
-        <parameter key="configuration_panel.admin.configuration.entity">KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType</parameter>
+        <parameter key="simple_configuration.admin.configuration.class">KunicMarko\SimpleConfigurationBundle\Admin\ConfigurationAdmin</parameter>
+        <parameter key="simple_configuration.admin.configuration.controller">SonataAdminBundle:CRUD</parameter>
+        <parameter key="simple_configuration.admin.configuration.entity">KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType</parameter>
     </parameters>
     <services>
-        <service id="configuration_panel.admin.configuration" class="%configuration_panel.admin.configuration.class%">
-            <tag name="sonata.admin" manager_type="orm" group="%configuration_panel.admin.groupname%" label="Configuration" />
+        <service id="simple_configuration.admin.configuration" class="%simple_configuration.admin.configuration.class%">
+            <tag name="sonata.admin" manager_type="orm" group="%simple_configuration.admin.groupname%" label="Configuration" />
             <argument/>
-            <argument>%configuration_panel.admin.configuration.entity%</argument>
-            <argument>%configuration_panel.admin.configuration.controller%</argument>
+            <argument>%simple_configuration.admin.configuration.entity%</argument>
+            <argument>%simple_configuration.admin.configuration.controller%</argument>
             <call method="setCustomSubClasses">
                 <argument type="collection">
                     <argument key="boolean">KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\BooleanType</argument>
                     <argument key="text">KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\TextType</argument>
                     <argument key="other">KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes\OtherType</argument>
                 </argument>
-                <argument>%configuration_panel.types%</argument>
+                <argument>%simple_configuration.types%</argument>
             </call>
         </service>
      </services>

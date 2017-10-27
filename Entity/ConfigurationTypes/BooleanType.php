@@ -12,28 +12,23 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
  */
 class BooleanType extends AbstractConfigurationType
 {
-    /**
-     * Get value.
-     *
-     * @return bool
-     */
-    public function getValue()
+    public function getValue() : bool
     {
-        return (bool) $this->value;
+        return (bool)$this->value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getTemplate()
+    public function getTemplate() : string
     {
-        return 'ConfigurationPanelBundle:CRUD:list_field_boolean.html.twig';
+        return 'SimpleConfigurationBundle:CRUD:list_field_boolean.html.twig';
     }
 
     /**
      * {@inheritdoc}
      */
-    public function generateFormField(FormMapper $formMapper)
+    public function generateFormField(FormMapper $formMapper) : void
     {
         $formMapper->add('value', ChoiceType::class, [
             'required' => false,

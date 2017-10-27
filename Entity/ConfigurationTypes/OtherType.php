@@ -12,10 +12,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
  */
 class OtherType extends AbstractConfigurationType
 {
+    public function getValue() : string
+    {
+        return $this->value;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function getTemplate()
+    public function getTemplate() : string
     {
         return 'SonataAdminBundle:CRUD:list_string.html.twig';
     }
@@ -23,7 +28,7 @@ class OtherType extends AbstractConfigurationType
     /**
      * {@inheritdoc}
      */
-    public function generateFormField(FormMapper $formMapper)
+    public function generateFormField(FormMapper $formMapper) : void
     {
         $formMapper->add('value', TextareaType::class, ['required' => false]);
     }

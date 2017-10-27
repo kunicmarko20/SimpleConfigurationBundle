@@ -30,8 +30,8 @@ class ConfigurationAdmin extends AbstractAdmin
 
         $listMapper
             ->add('name')
-            ->add('value', null, ['template' => 'ConfigurationPanelBundle:CRUD:list_field_value.html.twig'])
-            ->add('createdAt', null, ['template' => 'ConfigurationPanelBundle:CRUD:list_field_created_at.html.twig'])
+            ->add('value', null, ['template' => 'SimpleConfigurationBundle:CRUD:list_field_value.html.twig'])
+            ->add('createdAt', null, ['template' => 'SimpleConfigurationBundle:CRUD:list_field_created_at.html.twig'])
             ->add('_action', null, [
                 'actions' => [
                     'edit'   => [],
@@ -42,7 +42,7 @@ class ConfigurationAdmin extends AbstractAdmin
 
     public function configure()
     {
-        $this->setTemplate('list', 'ConfigurationPanelBundle:CRUD:list.html.twig');
+        $this->setTemplate('list', 'SimpleConfigurationBundle:CRUD:list.html.twig');
     }
 
     /**
@@ -55,6 +55,7 @@ class ConfigurationAdmin extends AbstractAdmin
         $formMapper
             ->with('Content')
                 ->add('name', TextType::class);
+
         $object->generateFormField($formMapper);
     }
 

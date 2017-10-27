@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
-class ConfigurationPanelExtension extends Extension
+class SimpleConfigurationExtension extends Extension
 {
     /**
      * @param array            $configs
@@ -17,7 +17,8 @@ class ConfigurationPanelExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $container->setParameter('configuration_panel.types', $config['types']);
+        $container->setParameter('simple_configuration.types', $config['types']);
+
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('admin.xml');
         $loader->load('listener.xml');
