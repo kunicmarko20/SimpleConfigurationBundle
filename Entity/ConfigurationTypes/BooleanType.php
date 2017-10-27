@@ -1,16 +1,16 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\Entity\ConfigurationTypes;
+namespace KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes;
 
 use Doctrine\ORM\Mapping as ORM;
-use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 /**
- * @ORM\Entity(repositoryClass="KunicMarko\SonataConfigurationPanelBundle\Repository\ConfigurationRepository")
+ * @ORM\Entity(repositoryClass="KunicMarko\SimpleConfigurationBundle\Repository\ConfigurationRepository")
  */
-class BooleanType extends AbstractConfiguration
+class BooleanType extends AbstractConfigurationType
 {
     /**
      * Get value.

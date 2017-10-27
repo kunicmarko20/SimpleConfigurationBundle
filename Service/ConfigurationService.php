@@ -1,8 +1,8 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\Service;
+namespace KunicMarko\SimpleConfigurationBundle\Service;
 
-use KunicMarko\SonataConfigurationPanelBundle\Repository\FindConfigurations;
+use KunicMarko\SimpleConfigurationBundle\Repository\FindConfigurations;
 
 class ConfigurationService
 {
@@ -36,7 +36,7 @@ class ConfigurationService
     public function getValueFor($name)
     {
         if (!array_key_exists($name, self::$config)) {
-            return;
+            return null;
         }
 
         return self::$config[$name];

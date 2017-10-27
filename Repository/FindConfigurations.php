@@ -1,9 +1,9 @@
 <?php
 
-namespace KunicMarko\SonataConfigurationPanelBundle\Repository;
+namespace KunicMarko\SimpleConfigurationBundle\Repository;
 
 use Doctrine\ORM\EntityManager;
-use KunicMarko\SonataConfigurationPanelBundle\Entity\AbstractConfiguration;
+use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 
 final class FindConfigurations
 {
@@ -18,7 +18,7 @@ final class FindConfigurations
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('c')
-            ->from(AbstractConfiguration::class, 'c', 'c.name');
+            ->from(AbstractConfigurationType::class, 'c', 'c.name');
 
         return $queryBuilder->getQuery()
             ->getArrayResult();
