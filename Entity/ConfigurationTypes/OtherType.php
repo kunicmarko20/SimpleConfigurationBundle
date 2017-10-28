@@ -2,17 +2,13 @@
 
 namespace KunicMarko\SimpleConfigurationBundle\Entity\ConfigurationTypes;
 
-use Doctrine\ORM\Mapping as ORM;
 use KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType;
 use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
-/**
- * @ORM\Entity(repositoryClass="KunicMarko\SimpleConfigurationBundle\Repository\ConfigurationRepository")
- */
 class OtherType extends AbstractConfigurationType
 {
-    public function getValue() : string
+    public function getValue() : ?string
     {
         return $this->value;
     }
@@ -30,6 +26,6 @@ class OtherType extends AbstractConfigurationType
      */
     public function generateFormField(FormMapper $formMapper) : void
     {
-        $formMapper->add('value', TextareaType::class, ['required' => false]);
+        $formMapper->add('value', TextareaType::class);
     }
 }

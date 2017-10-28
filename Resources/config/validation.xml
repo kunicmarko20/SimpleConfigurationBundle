@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping         http://symfony.com/schema/dic/services/constraint-mapping-1.0.xsd">
+    <class name="KunicMarko\SimpleConfigurationBundle\Entity\AbstractConfigurationType">
+        <constraint name="KunicMarko\SimpleConfigurationBundle\Validator\Constraints\UniqueName"/>
+        <property name="name">
+            <constraint name="NotNull"/>
+            <constraint name="Length">
+                <option name="max">255</option>
+                <option name="maxMessage">simple_configuration.name.too_long</option>
+            </constraint>
+        </property>
+        <property name="value">
+            <constraint name="NotNull"/>
+        </property>
+    </class>
+</constraint-mapping>

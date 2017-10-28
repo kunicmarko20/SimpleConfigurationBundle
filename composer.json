@@ -9,19 +9,24 @@
             "homepage": "https://twitter.com/kunicmarko20"
         }
     ],
-
     "keywords": ["sonata admin","sonata", "symfony", "bundle", "key value storage"],
     "homepage": "https://github.com/kunicmarko20/simple-configuration-bundle",
     "license": "MIT",
     "require": {
         "php": "^7.1",
-        "symfony/framework-bundle": "~2.8|~3.0",
+        "symfony/symfony": "~2.8|~3.0",
         "sonata-project/admin-bundle": "^3.2"
     },
+    "require-dev": {
+        "symfony/phpunit-bridge": "~2.7",
+        "matthiasnoback/symfony-dependency-injection-test": "^0.7",
+        "mockery/mockery": "^1.0"
+    },
     "autoload": {
-        "psr-4": {
-            "KunicMarko\\SimpleConfigurationBundle\\": ""
-        }
+        "psr-4": { "KunicMarko\\SimpleConfigurationBundle\\": "" },
+        "exclude-from-classmap": [
+            "Tests/"
+        ]
     },
     "extra": {
         "branch-alias": {

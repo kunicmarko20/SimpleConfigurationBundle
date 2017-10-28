@@ -25,5 +25,6 @@ class SimpleConfigurationExtension extends Extension
         $loader->load('repository.xml');
         $loader->load('service.xml');
         $loader->load('twig.xml');
+        $loader->load('validator.xml');
     }
 }
