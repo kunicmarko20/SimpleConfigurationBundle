@@ -15,7 +15,7 @@ class DiscriminatorMapListenerTest extends AbstractTest
 {
     public function testLoadClassMetadata()
     {
-        $annotationReader = $this->mockAnnotationReader(new Annotation(['value' =>['some' => 'thing']]));
+        $annotationReader = $this->mockAnnotationReader(new Annotation(['value' => ['some' => 'thing']]));
         $discriminatorMapListener = new DiscriminatorMapListener($annotationReader, ['some2' => 'thing2']);
 
         $loadClassMetadataArgs = $this->mockLoadClassMetadataEventArgs(

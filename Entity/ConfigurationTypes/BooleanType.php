@@ -27,7 +27,7 @@ class BooleanType extends AbstractConfigurationType
     public function generateFormField(FormMapper $formMapper) : void
     {
         $formMapper->add('value', ChoiceType::class, [
-            'choices'  => [
+            'choices' => [
                 0 => 'no',
                 1 => 'yes',
             ],
