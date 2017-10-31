@@ -27,7 +27,7 @@ final class ConfigurationRepository
     public function findOneByName(string $name)
     {
         $queryBuilder = $this->entityManager->createQueryBuilder()
-            ->select('c.value')
+            ->select('c')
             ->from(AbstractConfigurationType::class, 'c')
             ->where('c.name = :name')
             ->setParameter(':name', $name);
