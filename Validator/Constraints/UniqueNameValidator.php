@@ -22,7 +22,9 @@ class UniqueNameValidator extends ConstraintValidator
      */
     public function validate($configuration, Constraint $constraint)
     {
-        if ($this->configurationRepository->findOneByName($configuration->getName())) {
+        if (($object = $this->configurationRepository->findOneByName($configuration->getName())) &&
+            $object->getId() !== $configuration->getId()
+        ) {
             $this->context->buildViolation($constraint->message)
                 ->atPath('name')
                 ->addViolation();

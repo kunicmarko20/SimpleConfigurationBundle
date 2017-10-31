@@ -14,13 +14,13 @@ class UniqueNameValidatorTest extends AbstractTest
 {
     public function testValidateFail()
     {
-        $configurationRepository = MockConfigurationRepository::getValueForMock('nameExists');
+        $configurationRepository = MockConfigurationRepository::getValueForMock($this->mockConfiguration(57));
 
         $validator = new UniqueNameValidator($configurationRepository);
         $context = $this->mockContextWithViolation();
         $validator->initialize($context);
 
-        $configuration = $this->mockConfiguration();
+        $configuration = $this->mockConfigurationWithName(37);
         $validator->validate($configuration, new UniqueName());
     }
 
@@ -44,9 +44,21 @@ class UniqueNameValidatorTest extends AbstractTest
         return $context;
     }
 
-    private function mockConfiguration()
+    private function mockConfiguration($returnValue)
     {
         $configuration = $this->mock(AbstractConfigurationType::class);
+
+        $configuration->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue($returnValue));
+
+        return $configuration;
+    }
+
+    private function mockConfigurationWithName($returnValue)
+    {
+        $configuration = $this->mockConfiguration($returnValue);
+
         $configuration->expects($this->once())
             ->method('getName')
             ->will($this->returnValue('string'));
@@ -54,13 +66,23 @@ class UniqueNameValidatorTest extends AbstractTest
         return $configuration;
     }
 
-    public function testValidateValid()
+    public function testValidateValidNoObject()
     {
-        $configurationRepository = MockConfigurationRepository::getValueForMock(null);
+        $configurationRepository = MockConfigurationRepository::getValueForMock($this->mockConfiguration(null));
 
         $validator = new UniqueNameValidator($configurationRepository);
 
-        $configuration = $this->mockConfiguration();
+        $configuration = $this->mockConfigurationWithName(null);
+        $validator->validate($configuration, new UniqueName());
+    }
+
+    public function testValidateValidUpdateObject()
+    {
+        $configurationRepository = MockConfigurationRepository::getValueForMock($this->mockConfiguration(37));
+
+        $validator = new UniqueNameValidator($configurationRepository);
+
+        $configuration = $this->mockConfigurationWithName(37);
         $validator->validate($configuration, new UniqueName());
     }
 }
