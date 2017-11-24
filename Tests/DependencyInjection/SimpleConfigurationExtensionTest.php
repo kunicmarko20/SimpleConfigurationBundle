@@ -13,7 +13,7 @@ class SimpleConfigurationExtensionTest extends AbstractExtensionTestCase
         $this->load();
         $this->assertContainerBuilderHasService(
             'simple_configuration.service.configuration',
-            'KunicMarko\SimpleConfigurationBundle\Services\ConfigurationService'
+            'KunicMarko\SimpleConfigurationBundle\Service\ConfigurationService'
         );
     }
 
